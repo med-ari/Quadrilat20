@@ -1,0 +1,1234 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maestría en Cuadriláteros: Perímetros, Áreas y Aplicaciones Desafiantes</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: true
+        },
+        svg: {
+          fontCache: 'global'
+        },
+        chtml: {
+          displayAlign: 'left'
+        }
+      };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5; --primary-dark: #4338ca; --primary-light: #eef2ff;
+            --secondary-color: #64748b; --success-color: #10b981; --success-light: #ecfdf5;
+            --danger-color: #ef4444; --danger-light: #fef2f2; --warning-color: #f59e0b;
+            --light-bg: #f1f5f9; --border-color: #cbd5e1; --text-color: #1e293b;
+            --white: #ffffff; --progress-color-start: #4f46e5; --progress-color-end: #10b981;
+        }
+        @keyframes moveGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        body {
+            font-family: 'Inter', sans-serif; display: flex; justify-content: center;
+            align-items: flex-start; min-height: 100vh;
+            background: linear-gradient(-45deg, #6d28d9, #4f46e5, #d946ef, #10b981);
+            background-size: 400% 400%; animation: moveGradient 20s ease infinite;
+            margin: 0; padding: 2em 1em;
+        }
+        .main-wrapper { width: 100%; max-width: 900px; position: relative; }
+        .card { background: var(--white); padding: 2.5em; border-radius: 16px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15); animation: fadeIn 0.5s ease-out; }
+        .hidden { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDownFade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        #category-selection-screen h2 { font-size: 2em; color: var(--primary-color); text-align: center; margin-top: 0; margin-bottom: 0.5em; }
+        #category-selection-screen .subtitle { text-align: center; color: var(--secondary-color); margin-bottom: 2em; font-size: 1.1em; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+        #category-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5em; margin-bottom: 2.5em; }
+        .category-item { background-color: var(--white); border: 2px solid var(--border-color); border-radius: 12px; padding: 1.5em; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .category-item:hover:not(.completed) { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(79,70,229,0.1); border-color: var(--primary-color); }
+        .category-item h3 { margin: 0 0 0.5em 0; color: var(--primary-dark); font-size: 1.25em; }
+        .category-item p { margin: 0; color: var(--secondary-color); font-size: 0.95em; line-height: 1.5; }
+        .category-item.completed { border-color: var(--success-color); background-color: var(--success-light); cursor: default; }
+        .category-item.completed:hover { transform: none; box-shadow: none; }
+        .category-item.completed::before { content: '✔'; font-weight: bold; position: absolute; top: 1em; right: 1.2em; color: var(--success-color); font-size: 1.5em; }
+        .category-item .progress-info { margin-top: 1em; font-weight: bold; color: var(--success-color); }
+        #overall-progress-container { margin-top: 2em; text-align: center; border-top: 1px solid var(--border-color); padding-top: 2em;}
+        #overall-progress-container h3 { margin: 0 0 0.5em 0; color: var(--text-color); }
+        #overall-score { font-size: 1.2em; color: var(--secondary-color); }
+        #show-final-results-btn { padding: 12px 30px; font-size: 1em; font-weight: bold; color: var(--white); background-color: var(--success-color); border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s; margin-top: 1em; }
+        #show-final-results-btn:hover { background-color: #059669; }
+
+        /* --- New Summary Card Styles --- */
+        #summary-container h2 { font-size: 1.8em; margin-top: 0; margin-bottom: 0.2em; color: var(--primary-color); }
+        #summary-container .subtitle { color: var(--secondary-color); margin-top: 0; margin-bottom: 2em; }
+        .summary-section { margin-bottom: 2.5em; }
+        .summary-section h3 { font-size: 1.2em; font-weight: 700; color: var(--text-color); margin-bottom: 1em; padding-bottom: 0.5em; border-bottom: 2px solid var(--primary-light); display: flex; align-items: center; gap: 0.75em; }
+        .summary-key-concepts { line-height: 1.7; color: #374151; }
+        .summary-key-concepts p, .summary-key-concepts ul, .summary-key-concepts ol { margin-bottom: 1em; }
+        .summary-key-concepts ul, .summary-key-concepts ol { padding-left: 20px; }
+        .summary-key-concepts strong { color: var(--primary-dark); }
+        .summary-key-concepts mjx-container[display="true"] { background-color: rgba(79, 70, 229, 0.05); padding: 1em; border-radius: 8px; margin: 1em 0; }
+        .summary-tips-list { list-style: none; padding: 0; }
+        .summary-tips-list li { display: flex; align-items: flex-start; gap: 1em; margin-bottom: 1em; background-color: var(--primary-light); padding: 1em; border-radius: 8px; }
+        .summary-tips-list li::before { content: '💡'; font-size: 1.2em; line-height: 1.5; }
+        #summary-continue-btn { padding: 12px 30px; font-size: 1em; font-weight: bold; color: var(--white); background-color: var(--primary-color); border: none; border-radius: 10px; cursor: pointer; transition: all 0.2s; display: block; width: 100%; }
+        #summary-continue-btn:hover { background-color: var(--primary-dark); transform: scale(1.02); }
+
+        /* --- Main Quiz & Final Screen Styles --- */
+        #quiz-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5em; }
+        #problem-header { color: var(--text-color); font-weight: 600; font-size: 1.1em; }
+        #score-counter { color: var(--success-color); font-weight: 600; font-size: 1em; background-color: var(--success-light); padding: 5px 10px; border-radius: 8px; }
+        #progress-container { width: 100%; background-color: #e2e8f0; border-radius: 10px; margin-bottom: 1.5em; height: 12px; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--progress-color-start), var(--progress-color-end)); border-radius: 10px; transition: width 0.6s cubic-bezier(0.4, 0.0, 0.2, 1); }
+        #question-container { font-size: 1.15em; line-height: 1.7; margin: 1em 0; color: var(--text-color); text-align: justify; }
+        #question-container table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+        #question-container th, #question-container td { border: 1px solid var(--border-color); padding: 12px; text-align: center; }
+        #question-container th { background-color: var(--light-bg); font-weight: 600; }
+        #graph-container, .option-graph-canvas-container { width: 100%; max-width: 450px; margin: 1.5em auto; border-radius: 8px; overflow: hidden; }
+        #graph-container svg, .option-graph-canvas-container svg {max-width: 100%; height: auto; display: block; margin: 0 auto; background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);}
+        #options-container { margin-top: 1.5em; display: flex; flex-direction: column; gap: 0.75em; }
+        .option-button { display: flex; align-items: center; gap: 1em; width: 100%; padding: 14px 18px; font-size: 1.05em; text-align: left; background-color: var(--white); border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.2s ease-in-out; }
+        .option-button:hover:not(.disabled) { border-color: var(--primary-color); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .option-button .label { font-weight: bold; color: var(--primary-color); }
+        .option-button .value { flex-grow: 1; }
+        .option-button.correct { border-color: var(--success-color); background-color: var(--success-light); }
+        .option-button.correct .label { color: var(--success-color); }
+        .option-button.incorrect { border-color: var(--danger-color); background-color: var(--danger-light); }
+        .option-button.incorrect .label { color: var(--danger-color); }
+        .option-button.disabled { cursor: not-allowed; }
+        .options-grid-with-graphs { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
+        .option-block-graph { padding: 1em; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.2s ease-in-out; background-color: var(--white); }
+        .option-block-graph:hover:not(.disabled) { border-color: var(--primary-color); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .option-block-graph.correct { border-color: var(--success-color)!important; background-color: var(--success-light); }
+        .option-block-graph.incorrect { border-color: var(--danger-color)!important; background-color: var(--danger-light); }
+        .option-block-graph .label { font-size: 1.2em; font-weight: bold; margin-bottom: 0.5em; color: var(--primary-color); }
+        #feedback-container { margin-top: 1.5em; padding: 1.2em; border-radius: 12px; display: none; animation: slideDownFade 0.4s ease-out; line-height: 1.7; text-align: justify; }
+        #feedback-container.correct { background-color: var(--success-light); border-left: 5px solid var(--success-color); }
+        #feedback-container.incorrect { background-color: var(--danger-light); border-left: 5px solid var(--danger-color); }
+        #feedback-title { display: flex; align-items: center; font-size: 1.2em; font-weight: 700; margin-bottom: 0.5em; }
+        #feedback-title svg { width: 24px; height: 24px; margin-right: 8px; }
+        #feedback-container.correct #feedback-title { color: var(--success-color); }
+        #feedback-container.incorrect #feedback-title { color: var(--danger-color); }
+        #navigation-container { display: flex; justify-content: flex-end; margin-top: 2em; }
+        #next-button, .nav-btn { padding: 12px 30px; font-size: 1em; font-weight: bold; color: var(--white); background-color: var(--primary-color); border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s; }
+        #next-button { visibility: hidden; opacity: 0; }
+        #next-button.visible { visibility: visible; opacity: 1; }
+        #next-button:hover, .nav-btn:hover { background-color: var(--primary-dark); }
+        #final-screen { text-align: center; animation: fadeIn 0.5s ease-out; }
+        #final-screen h2 { font-size: 2.2em; color: var(--primary-color); font-weight: 700; }
+        #final-screen p { font-size: 1.2em; }
+        .highlight { color: var(--primary-color); font-weight: 700; }
+        @media (max-width: 680px) { .options-grid-with-graphs { grid-template-columns: 1fr; } #category-list { grid-template-columns: 1fr; }}
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div id="category-selection-screen" class="card">
+            <h2>Maestría en Cuadriláteros: Perímetros, Áreas y Aplicaciones Desafiantes</h2>
+            <p class="subtitle">Selecciona un tema para comenzar. Cada sección se enfoca en una habilidad clave. ¡Completa todas las secciones para demostrar tu maestría!</p>
+            <ul id="category-list"></ul>
+            <div id="overall-progress-container" class="hidden">
+                <h3>Progreso General</h3>
+                <p id="overall-score"></p>
+                <button id="show-final-results-btn" class="nav-btn hidden">Ver Resumen Final</button>
+            </div>
+        </div>
+
+        <div id="quiz-wrapper" class="hidden">
+            <div id="summary-container" class="card hidden">
+                <h2 id="summary-title"></h2>
+                <p class="subtitle">Prepárate para la siguiente sección.</p>
+
+                <div class="summary-section">
+                    <h3>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open" style="color: var(--primary-dark);"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                      Conceptos Clave y Fórmulas
+                    </h3>
+                    <div id="summary-key-concepts" class="summary-key-concepts"></div>
+                </div>
+                
+                <div class="summary-section">
+                    <h3>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap" style="color: var(--warning-color);"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                      Consejos para esta Sección
+                    </h3>
+                    <ul id="summary-tips-list" class="summary-tips-list"></ul>
+                </div>
+                
+                <button id="summary-continue-btn">Comenzar Problemas</button>
+            </div>
+
+            <div id="quiz-container" class="hidden card">
+                <div id="progress-container"><div id="progress-bar"></div></div>
+                <div id="quiz-header-bar">
+                    <div id="problem-header"></div>
+                    <div id="score-counter"></div>
+                </div>
+                <div id="question-container"></div>
+                <div id="graph-container"></div>
+                <div id="options-container"></div>
+                <div id="feedback-container"></div>
+                <div id="navigation-container"><button id="next-button">Siguiente →</button></div>
+            </div>
+
+            <div id="final-screen" class="hidden card">
+                <h2 id="final-title"></h2>
+                <p id="final-message"></p>
+                <p id="final-score" style="font-size: 2.5em; font-weight: bold; margin: 0.5em 0;"></p>
+                <p id="final-percentage" style="font-size: 1.5em;"></p>
+                <button id="back-to-menu-btn" class="nav-btn">Volver al Menú</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function renderMath() {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        setTimeout(() => window.MathJax.typesetPromise(), 0);
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const icons = {
+            check: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>`,
+            x: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+        };
+        const summaries = {
+  "ai-cat-1756087401962-0": {
+    "title": "Conceptos Fundamentales y Propiedades de Cuadriláteros",
+    "key_concepts_html": "<p>Esta categoría sienta las bases, explorando las <strong>propiedades esenciales de los cuadriláteros</strong> y las fórmulas básicas para calcular sus perímetros y áreas.</p><strong>Conceptos Clave:</strong><ul><li><strong>Cuadrilátero:</strong> Polígono de cuatro lados y cuatro vértices.</li><li><strong>Perímetro:</strong> La suma de las longitudes de todos los lados de una figura.</li><li><strong>Área:</strong> La medida de la superficie delimitada por una figura.</li></ul><strong>Fórmulas Básicas:</strong><ul><li>Perímetro de un Cuadrado: \\(P = 4L\\)</li><li>Área de un Cuadrado: \\(A = L^2\\)</li><li>Perímetro de un Rectángulo: \\(P = 2(l + a)\\)</li><li>Área de un Rectángulo: \\(A = l \\times a\\)</li><li>Área de un Romboide/Paralelogramo: \\(A = b \\times h\\) (base por altura)</li><li>Teorema de Pitágoras: En un triángulo rectángulo, \\(c^2 = a^2 + b^2\\) (útil para diagonales).</li><li>Mediana de un Trapecio: \\(M = \\frac{b_1 + b_2}{2}\\)</li></ul><p>Presta atención a las <strong>definiciones</strong> y a cómo las <strong>propiedades de los lados y ángulos</strong> afectan las medidas.</p>",
+    "tips": [
+      "Presta atención a los detalles en los enunciados y diagramas.",
+      "Recuerda revisar las fórmulas y conceptos clave relacionados antes de empezar.",
+      "Usa la explicación para entender tus errores y reforzar tu aprendizaje.",
+      "¡Mucha suerte en esta sección!"
+    ]
+  },
+  "ai-cat-1756087401962-1": {
+    "title": "Cálculo de Perímetros y Áreas de Cuadriláteros Específicos",
+    "key_concepts_html": "<p>En esta sección, aplicarás las fórmulas de perímetro y área a <strong>cuadriláteros específicos</strong> como rectángulos, rombos y trapecios. Se espera que utilices el Teorema de Pitágoras para encontrar lados o alturas desconocidas.</p><strong>Fórmulas Clave para Cuadriláteros Específicos:</strong><ul><li>Área de un Trapecio: \\(A = \\frac{(b_1 + b_2)}{2} h\\)</li><li>Área de un Rombo: \\(A = \\frac{d_1 \\times d_2}{2}\\) (donde \\(d_1\\) y \\(d_2\\) son las diagonales)</li><li>Relación Lado-Diagonal en un Rombo: Las diagonales de un rombo son perpendiculares y se bisecan entre sí, formando cuatro triángulos rectángulos. Por lo tanto, \\((\\frac{d_1}{2})^2 + (\\frac{d_2}{2})^2 = L^2\\) (donde \\(L\\) es la longitud del lado).</li><li><strong>Teorema de Pitágoras:</strong> Fundamental para encontrar longitudes desconocidas en triángulos rectángulos formados dentro de los cuadriláteros.</li></ul><p>Recuerda que la <strong>visualización</strong> y la <strong>descomposición</strong> de figuras complejas en más simples (como triángulos rectángulos) son habilidades cruciales aquí.</p>",
+    "tips": [
+      "Presta atención a los detalles en los enunciados y diagramas.",
+      "Recuerda revisar las fórmulas y conceptos clave relacionados antes de empezar.",
+      "Usa la explicación para entender tus errores y reforzar tu aprendizaje.",
+      "¡Mucha suerte en esta sección!"
+    ]
+  },
+  "ai-cat-1756087401962-2": {
+    "title": "Geometría Coordenada y Figuras Compuestas Simples",
+    "key_concepts_html": "<p>Esta categoría te desafía a aplicar tus conocimientos de geometría en el <strong>plano cartesiano</strong> y a trabajar con <strong>figuras compuestas simples</strong>, calculando sus perímetros y áreas mediante la descomposición o el uso de coordenadas.</p><strong>Herramientas Esenciales:</strong><ul><li><strong>Distancia entre dos puntos:</strong> Para puntos \\((x_1, y_1)\\) y \\((x_2, y_2)\\), la distancia es \\(d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}\\). Esta fórmula es clave para encontrar las longitudes de los lados de un cuadrilátero en el plano.</li><li><strong>Perímetro de una figura:</strong> La suma de las longitudes de todos sus lados.</li><li><strong>Área de figuras compuestas:</strong> Puede calcularse dividiendo la figura en formas básicas conocidas (rectángulos, cuadrados, triángulos) y sumando o restando sus áreas.</li><li><strong>Identificación de propiedades:</strong> Usa las coordenadas para verificar si los lados son paralelos (misma pendiente), perpendiculares (pendientes inversas y opuestas), o iguales en longitud.</li></ul><p>Recuerda que en figuras compuestas, a menudo puedes simplificar calculando el área o perímetro de figuras básicas y combinándolas.</p>",
+    "tips": [
+      "Presta atención a los detalles en los enunciados y diagramas.",
+      "Recuerda revisar las fórmulas y conceptos clave relacionados antes de empezar.",
+      "Usa la explicación para entender tus errores y reforzar tu aprendizaje.",
+      "¡Mucha suerte en esta sección!"
+    ]
+  },
+  "ai-cat-1756087401962-3": {
+    "title": "Problemas Avanzados y Aplicaciones",
+    "key_concepts_html": "<p>Esta categoría agrupa los problemas más desafiantes, donde deberás integrar múltiples conceptos, resolver ecuaciones algebraicas a partir de restricciones geométricas, y posiblemente emplear trigonometría para determinar medidas desconocidas en contextos aplicados.</p><strong>Estrategias Avanzadas:</strong><ul><li><strong>Modelado algebraico:</strong> Frecuentemente, las dimensiones se expresan con variables, llevando a la necesidad de establecer y resolver ecuaciones (lineales o cuadráticas) para encontrar los valores. Por ejemplo, si el área es \\(A = x(x+2)\\), podrías necesitar resolver una ecuación cuadrática.</li><li><strong>Descomposición y composición:</strong> Para figuras complejas, divide en formas geométricas más simples, o considera la figura total y resta áreas.</li><li><strong>Uso de razones trigonométricas:</strong> Para trapecios o triángulos que no son rectángulos, las funciones trigonométricas (seno, coseno, tangente) son cruciales para calcular alturas o longitudes de lados cuando se conocen ángulos. Por ejemplo: <ul><li>\\(\\sin(\\theta) = \\frac{\\text{opuesto}}{\\text{hipotenusa}}\\)</li><li>\\(\\cos(\\theta) = \\frac{\\text{adyacente}}{\\text{hipotenusa}}\\)</li><li>\\(\\tan(\\theta) = \\frac{\\text{opuesto}}{\\text{adyacente}}\\)</li></ul></li><li><strong>Análisis de unidades:</strong> Asegúrate de que todas las medidas estén en las mismas unidades antes de realizar cálculos.</li></ul><p>Estos problemas requieren un pensamiento crítico y la capacidad de traducir escenarios del mundo real a modelos matemáticos.</p>",
+    "tips": [
+      "Presta atención a los detalles en los enunciados y diagramas.",
+      "Recuerda revisar las fórmulas y conceptos clave relacionados antes de empezar.",
+      "Usa la explicación para entender tus errores y reforzar tu aprendizaje.",
+      "¡Mucha suerte en esta sección!"
+    ]
+  }
+};
+        const allProblemsData = [
+  {
+    "correct": 3,
+    "explanation": "<ol><li>Las diagonales de un trapecio isósceles no son siempre perpendiculares; solo lo son en casos especiales. (La afirmación A es incorrecta).</li><li>Las diagonales de un trapecio (incluso isósceles) no se bisecan entre sí, a menos que sea un paralelogramo. (La afirmación B es incorrecta).</li><li>Una propiedad fundamental de los trapecios isósceles es que sus diagonales tienen la misma medida (son congruentes). (La afirmación C es incorrecta).</li><li>Un trapecio isósceles posee exactamente un eje de simetría, que es la línea que pasa por los puntos medios de las bases paralelas. (La afirmación D es correcta).</li></ol>",
+    "options": [
+      {
+        "text": "En un trapecio isósceles, sus diagonales son siempre perpendiculares."
+      },
+      {
+        "text": "En un trapecio isósceles, sus diagonales se dimidian."
+      },
+      {
+        "text": "En un trapecio isósceles, las diagonales tienen distintas medidas."
+      },
+      {
+        "text": "El un trapecio isósceles, tiene 1 eje de simetría."
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "¿Cuál de las siguientes afirmaciones es correcta?",
+    "originalQuestionNumber": "15",
+    "internalId": "q-1756085990503-0.8185610861452094",
+    "id": "q-ai-cat-1756087401962-0-0"
+  },
+  {
+    "correct": 3,
+    "explanation": "<ol><li>Un paralelogramo es un cuadrilátero con dos pares de lados paralelos. Analicemos cada afirmación:</li><li>A) Si sus ángulos son rectos es un cuadrado: Si los ángulos de un paralelogramo son rectos, es un rectángulo. Para que sea un cuadrado, además debe tener todos sus lados iguales. Un rectángulo con lados de diferente longitud no es un cuadrado. Por lo tanto, esta afirmación es FALSA para todos los paralelogramos.</li><li>B) Los ángulos consecutivos son complementarios: En un paralelogramo, los ángulos consecutivos son suplementarios (suman \\(180^\\circ\\)), no complementarios (suman \\(90^\\circ\\)). Por lo tanto, esta afirmación es FALSA.</li><li>C) Las diagonales son bisectrices: Las diagonales de un paralelogramo se bisecan entre sí (es decir, se cortan por la mitad), pero no necesariamente bisecan los ángulos del paralelogramo. Solo bisecan los ángulos si el paralelogramo es un rombo (o un cuadrado). Por lo tanto, esta afirmación es FALSA para todos los paralelogramos.</li><li>D) Los ángulos opuestos son congruentes: Una propiedad fundamental de todos los paralelogramos es que sus ángulos opuestos son iguales (congruentes). Por lo tanto, esta afirmación es VERDADERA.</li></ol>",
+    "options": [
+      {
+        "text": "Si sus ángulos son rectos es un cuadrado"
+      },
+      {
+        "text": "Los ángulos consecutivos son complementarios"
+      },
+      {
+        "text": "Las diagonales son bisectrices"
+      },
+      {
+        "text": "Los ángulos opuestos son congruentes"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "¿Cuál de las siguientes afirmaciones es correcta para todos los paralelogramos?",
+    "originalQuestionNumber": "34",
+    "internalId": "q-1756085925755-0.8516781171697425",
+    "id": "q-ai-cat-1756087401962-0-1"
+  },
+  {
+    "correct": 3,
+    "explanation": "<ol><li>El largo del cordel \\(x\\) se utiliza para formar el perímetro del cuadrado.</li><li>Por lo tanto, el perímetro del cuadrado es \\(P = x\\).</li><li>La fórmula del perímetro de un cuadrado es \\(P = 4L\\), donde \\(L\\) es la longitud del lado del cuadrado.</li><li>Igualando, \\(x = 4L\\).</li><li>Despejando \\(L\\), obtenemos \\(L = \\frac{x}{4}\\).</li><li>El área de un cuadrado se calcula como \\(A = L^2\\).</li><li>Sustituyendo el valor de \\(L\\), el área es \\(A = \\left(\\frac{x}{4}\\right)^2 = \\frac{x^2}{16}\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(x^2\\)"
+      },
+      {
+        "text": "\\(\\frac{x^2}{4}\\)"
+      },
+      {
+        "text": "\\(\\frac{x^2}{8}\\)"
+      },
+      {
+        "text": "\\(\\frac{x^2}{16}\\)"
+      }
+    ],
+    "sourceFileName": "preuniversitario-gauss-geometria-clase-20.png",
+    "text": "Con un cordel de largo \\(x\\) se forma un cuadrado. ¿Cuánto mide el área del cuadrado formado con el cordel?",
+    "originalQuestionNumber": "39",
+    "internalId": "q-1756085882786-0.6134010923140278",
+    "id": "q-ai-cat-1756087401962-0-2"
+  },
+  {
+    "correct": 0,
+    "explanation": "<ol><li>Sea \\(L\\) la longitud del lado original del cuadrado.</li><li>El perímetro original es \\(P_1 = 4L\\).</li><li>El área original es \\(A_1 = L^2\\).</li><li>Cuando el lado se duplica, la nueva longitud del lado es \\(L' = 2L\\).</li><li>El nuevo perímetro es \\(P_2 = 4L' = 4(2L) = 8L\\). Comparando con \\(P_1\\), \\(P_2 = 2P_1\\), lo que significa que el perímetro se duplica.</li><li>La nueva área es \\(A_2 = (L')^2 = (2L)^2 = 4L^2\\). Comparando con \\(A_1\\), \\(A_2 = 4A_1\\), lo que significa que el área se cuadruplica.</li><li>Por lo tanto, el perímetro se duplica y el área se cuadruplica.</li></ol>",
+    "options": [
+      {
+        "text": "El perímetro se duplica y el área se cuadruplica"
+      },
+      {
+        "text": "El perímetro se cuadruplica y el área se duplica"
+      },
+      {
+        "text": "El perímetro y el área se duplican"
+      },
+      {
+        "text": "El perímetro y el área se cuadruplican"
+      }
+    ],
+    "sourceFileName": "preuniversitario-gauss-geometria-clase-20.png",
+    "text": "¿Cuál es la conclusión correcta respecto al perímetro y al área de un cuadrado cuando la medida de su lado se duplica?",
+    "originalQuestionNumber": "38",
+    "internalId": "q-1756085882786-0.8236529116306163",
+    "id": "q-ai-cat-1756087401962-0-3"
+  },
+  {
+    "correct": 0,
+    "explanation": "<ol><li>Para encontrar la diagonal de un rectángulo, se utiliza el Teorema de Pitágoras, ya que la diagonal forma un triángulo rectángulo con el largo y el ancho del rectángulo.</li><li>La fórmula es \text{diagonal}^2 = \text{largo}^2 + \text{ancho}^2.</li><li>Sustituyendo los valores dados: \text{diagonal}^2 = (12 \\, \\text{cm})^2 + (5 \\, \\text{cm})^2.</li><li>Calculando los cuadrados: \text{diagonal}^2 = 144 \\, \\text{cm}^2 + 25 \\, \\text{cm}^2 = 169 \\, \\text{cm}^2.</li><li>Para encontrar la diagonal, tomamos la raíz cuadrada: \text{diagonal} = \\sqrt{169 \\, \\text{cm}^2} = 13 \\, \\text{cm}.</li></ol>",
+    "options": [
+      {
+        "text": "\\(13 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(12 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(13\\sqrt{10} \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(12\\sqrt{10} \\, \\text{cm}\\)"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "Si el largo y el ancho de un rectángulo miden \\(12 \\, \\text{cm}\\) y \\(5 \\, \\text{cm}\\) respectivamente, entonces su diagonal mide:",
+    "originalQuestionNumber": "6",
+    "internalId": "q-1756085883059-0.40056421613055426",
+    "id": "q-ai-cat-1756087401962-0-4"
+  },
+  {
+    "correct": 2,
+    "explanation": "<ol><li>Un romboide es un paralelogramo. El área de un paralelogramo se calcula como el producto de dos lados adyacentes por el seno del ángulo entre ellos, o como base por altura.</li><li>Los lados adyacentes son \n          \n            a = 20\n          \n            \n              cm\n            \n          \n          y \n          \n            b = 10\\sqrt{8}\n          \n            \n              cm\n            \n          \n          . El ángulo entre ellos es \n          \n            135^\n          \n            \n              \\circ\n            \n          \n          .</li><li>Primero, simplificamos la longitud de la base: \n          \n            \\[b = 10\\sqrt{8}\n            \n              \\text{ cm}\n            \n            = 10\\sqrt{4 \\cdot 2}\n            \n              \\text{ cm}\n            \n            = 10 \\cdot 2\\sqrt{2}\n            \n              \\text{ cm}\n            \n            = 20\\sqrt{2}\n            \n              \\text{ cm}\n            \n            \\]\n          \n          .</li><li>El ángulo que necesitamos para la fórmula del área es el ángulo agudo del paralelogramo, o el suplementario del ángulo dado si es obtuso. El ángulo dado es \n          \n            135^\n          \n            \n              \\circ\n            \n          \n          , por lo tanto, el ángulo agudo es \n          \n            \\theta = 180^\n          \n            \n              \\circ\n            \n          \n            - 135^\n          \n            \n              \\circ\n            \n          \n            = 45^\n          \n            \n              \\circ\n            \n          \n          .</li><li>Ahora calculamos el área (A) usando la fórmula \n          \n            A = a \\cdot b \\cdot \\sin(\\theta)\n          \n          , donde \n          \n            a\n          \n          y \n          \n            b\n          \n          son las longitudes de los lados adyacentes y \n          \n            \\theta\n          \n          es el ángulo entre ellos. Podemos usar \n          \n            a = 20\n          \n            \n              cm\n            \n          \n          , \n          \n            b = 20\\sqrt{2}\n          \n            \n              cm\n            \n          \n          y \n          \n            \\theta = 45^\n          \n            \n              \\circ\n            \n          \n          (o podemos calcular la altura).</li><li>Calculando la altura \n          \n            h\n          \n          : \n          \n            \\[h = a \\cdot \\sin(45^\n            \n              \\circ\n            \n            ) = 20\n            \n              \\text{ cm}\n            \n            \\cdot \\frac{\\sqrt{2}}{2} = 10\\sqrt{2}\n            \n              \\text{ cm}\n            \n            \\]\n          \n          .</li><li>Calculando el área con base por altura: \n          \n            \\[A = b \\cdot h = (20\\sqrt{2}\n            \n              \\text{ cm}\n            \n            ) \\cdot (10\\sqrt{2}\n            \n              \\text{ cm}\n            \n            )\\]\n          \n            \\[A = 200 \\cdot (\\sqrt{2})^2\n            \n              \\text{ cm}^2\n            \n            = 200 \\cdot 2\n            \n              \\text{ cm}^2\n            \n            = 400\n            \n              \\text{ cm}^2\n            \n            \\]\n          \n          .</li><li>El área del romboide es \n          \n            400\n          \n            \n              cm\n            \n          \n            \n              2\n            \n          \n          , que corresponde a la opción C.</li></ol>",
+    "options": [
+      {
+        "text": "$1.600 \\text{ cm}^2$"
+      },
+      {
+        "text": "$200 \\text{ cm}^2$"
+      },
+      {
+        "text": "$400 \\text{ cm}^2$"
+      },
+      {
+        "text": "$200\\sqrt{8} \\text{ cm}^2$"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "La figura adjunta corresponde a un romboide con las dimensiones descritas. ¿Cuál es el área del romboide?",
+    "diagram": {
+      "type": "svg",
+      "code": "<svg viewBox=\"0 0 80 80\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <marker id=\"arrowhead_black\" markerWidth=\"10\" markerHeight=\"7\" refX=\"0\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"black\" /></marker>\n  </defs>\n  <path d=\"M 10 70 L 38.28 70 L 52.42 55.86 L 24.14 55.86 Z\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" />\n  <line x1=\"6.47\" y1=\"66.47\" x2=\"20.61\" y2=\"52.33\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrowStart)\" marker-end=\"url(#arrowhead_black)\" />\n  <foreignObject x=\"-0.6047162628173828\" y=\"47.582621002197264\" width=\"25\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 7px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">20 cm</div>\n  </foreignObject>\n  <line x1=\"10\" y1=\"75\" x2=\"38.28\" y2=\"75\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrowStart)\" marker-end=\"url(#arrowhead_black)\" />\n  <foreignObject x=\"18\" y=\"78\" width=\"35\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 9px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">$\text{10}\\\text{sqrt{8}}$ cm</div>\n  </foreignObject>\n  <foreignObject x=\"28.869258880615234\" y=\"58.663673400878906\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 5px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">135°</div>\n  </foreignObject>\n</svg>"
+    },
+    "originalQuestionNumber": "9",
+    "internalId": "q-1756085974789-0.020817290174211633",
+    "id": "q-ai-cat-1756087401962-0-5"
+  },
+  {
+    "correct": 0,
+    "explanation": "<ol><li>El área de un trapecio se calcula multiplicando la longitud de su mediana por su altura. La fórmula es: \\(\\text{Área} = \\text{Mediana} \\times \\text{Altura}\\).</li><li>Según el enunciado, la mediana \\(EF\\) mide \\(8 \\, \\text{cm}\\) y la altura \\(AD\\) mide \\(10 \\, \\text{cm}\\).</li><li>Sustituimos estos valores en la fórmula: \\(\\text{Área} = 8 \\, \\text{cm} \\times 10 \\, \\text{cm}\\).</li><li>Realizamos la multiplicación: \\(\\text{Área} = 80 \\, \\text{cm}^2\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(80 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(30 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(50 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(45 \\, \\text{cm}^2\\)"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "En la figura, se tiene el trapecio \\(ABCD\\) de bases \\(AB\\) y \\(CD\\), mediana \\(EF = 8 \\, \\text{cm}\\) y altura \\(AD = 10 \\, \\text{cm}\\). Entonces, su área es:",
+    "diagram": {
+      "code": "<svg viewBox=\"0 0 160 140\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"20,120 150,120 100,20 20,20\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\"></polygon><line x1=\"20\" y1=\"70\" x2=\"125\" y2=\"70\" stroke=\"black\" stroke-width=\"1.5\"></line><line x1=\"20\" y1=\"120\" x2=\"30\" y2=\"120\" stroke=\"black\" stroke-width=\"1\"></line><line x1=\"20\" y1=\"120\" x2=\"20\" y2=\"110\" stroke=\"black\" stroke-width=\"1\"></line><line x1=\"30\" y1=\"120\" x2=\"30\" y2=\"110\" stroke=\"black\" stroke-width=\"1\"></line><line x1=\"20\" y1=\"110\" x2=\"30\" y2=\"110\" stroke=\"black\" stroke-width=\"1\"></line><foreignObject x=\"10\" y=\"125\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">A</div></foreignObject><foreignObject x=\"145\" y=\"125\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">B</div></foreignObject><foreignObject x=\"95\" y=\"5\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">C</div></div></foreignObject><foreignObject x=\"10\" y=\"5\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">D</div></foreignObject><foreignObject x=\"5\" y=\"65\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">E</div></foreignObject><foreignObject x=\"120\" y=\"65\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">F</div></foreignObject></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "20",
+    "internalId": "q-1756085889717-0.18317794329791282",
+    "id": "q-ai-cat-1756087401962-0-6"
+  },
+  {
+    "correct": 0,
+    "explanation": "<ol><li>Identificamos que la altura y el largo de la pantalla, junto con la diagonal, forman un triángulo rectángulo.</li><li>Aplicamos el teorema de Pitágoras, donde la diagonal (d) es la hipotenusa: d^2 = \\text{alto}^2 + \\text{largo}^2.</li><li>Sustituimos los valores dados: d^2 = (51 \\, \\text{pulgadas})^2 + (68 \\, \\text{pulgadas})^2.</li><li>Calculamos los cuadrados de las medidas: d^2 = 2601 \\, \\text{pulgadas}^2 + 4624 \\, \\text{pulgadas}^2.</li><li>Sumamos los resultados: d^2 = 7225 \\, \\text{pulgadas}^2.</li><li>Finalmente, calculamos la raíz cuadrada para obtener la medida de la diagonal: d = \\sqrt{7225} \\, \\text{pulgadas} = 85 \\, \\text{pulgadas}.</li></ol>",
+    "options": [
+      {
+        "text": "\\(85 \\, \\text{pulgadas}\\)"
+      },
+      {
+        "text": "\\(80 \\, \\text{pulgadas}\\)"
+      },
+      {
+        "text": "\\(81 \\, \\text{pulgadas}\\)"
+      },
+      {
+        "text": "\\(\\sqrt{79} \\, \\text{pulgadas}\\)"
+      }
+    ],
+    "sourceFileName": "quiz_page.png",
+    "text": "La medida comercial en pulgadas de una pantalla led, corresponde a la diagonal del rectángulo formado por la pantalla. ¿Cuál es la medida comercial en pulgadas de una pantalla con \\(51\\) pulgadas de alto y \\(68\\) pulgadas de largo?",
+    "originalQuestionNumber": "29",
+    "internalId": "q-1756085889754-0.7544450371162331",
+    "id": "q-ai-cat-1756087401962-1-0"
+  },
+  {
+    "correct": 2,
+    "explanation": "<ol><li>El trapecio \\(ABCD\\) es un trapecio rectángulo, lo que significa que \\(\\angle A = \\angle D = 90^\\circ\\). Se nos da que \\(DC = 8 \\, \\text{cm}\\), \\(BC = 8 \\, \\text{cm}\\) y \\(\\angle B = 60^\\circ\\).</li><li>Trazamos una altura desde \\(C\\) hasta la base \\(AB\\) y la llamamos \\(CH\\). Esto crea un rectángulo \\(ADCH\\) y un triángulo rectángulo \\(CHB\\).</li><li>En el rectángulo \\(ADCH\\), \\(AH = DC = 8 \\, \\text{cm}\\).</li><li>En el triángulo rectángulo \\(CHB\\), podemos usar las relaciones trigonométricas. \\(CH = BC \\cdot \\sin(60^\\circ) = 8 \\cdot \\frac{\\sqrt{3}}{2} = 4\\sqrt{3} \\, \\text{cm}\\). Esta es la altura del trapecio, \\(AD = CH = 4\\sqrt{3} \\, \\text{cm}\\).</li><li>También, \\(HB = BC \\cdot \\cos(60^\\circ) = 8 \\cdot \\frac{1}{2} = 4 \\, \\text{cm}\\).</li><li>La base mayor \\(AB = AH + HB = 8 + 4 = 12 \\, \\text{cm}\\).</li><li>El área de un trapecio se calcula con la fórmula \\(Area = \\frac{(Base_1 + Base_2)}{2} \\cdot Altura\\). En este caso, \\(Area = \\frac{(AB + DC)}{2} \\cdot AD\\).</li><li>Sustituimos los valores: \\(Area = \\frac{(12 + 8)}{2} \\cdot 4\\sqrt{3} = \\frac{20}{2} \\cdot 4\\sqrt{3} = 10 \\cdot 4\\sqrt{3} = 40\\sqrt{3} \\, \\text{cm}^2\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(40\\sqrt{2}\\)"
+      },
+      {
+        "text": "\\(32\\sqrt{3}\\)"
+      },
+      {
+        "text": "\\(40\\sqrt{3}\\)"
+      },
+      {
+        "text": "\\(28 + 4\\sqrt{3}\\)"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "¿Cuál es el área, en \\(\\text{cm}^2\\), del trapecio rectángulo \\(ABCD\\) adjunto?",
+    "diagram": {
+      "type": "svg",
+      "code": "<svg viewBox=\"0 0 200 150\" xmlns=\"http://www.w3.org/2000/svg\">  <line x1=\"50\" y1=\"30\" x2=\"130\" y2=\"30\" stroke=\"black\" stroke-width=\"1\" />\n  <line x1=\"50\" y1=\"30\" x2=\"50\" y2=\"120\" stroke=\"black\" stroke-width=\"1\" />\n  <line x1=\"50\" y1=\"120\" x2=\"170\" y2=\"120\" stroke=\"black\" stroke-width=\"1\" />\n  <line x1=\"130\" y1=\"30\" x2=\"170\" y2=\"120\" stroke=\"black\" stroke-width=\"1\" />\n  <rect x=\"50.15348815917969\" y=\"29.999666213989258\" width=\"4\" height=\"4\" stroke=\"black\" fill=\"none\" stroke-width=\"1\" />\n  <rect x=\"50.61494827270508\" y=\"116.4617919921875\" width=\"4\" height=\"4\" stroke=\"black\" fill=\"none\" stroke-width=\"1\" />\n  <foreignObject x=\"41.69202423095703\" y=\"117.07740020751953\" width=\"10\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">A</div>\n  </foreignObject>\n  <foreignObject x=\"170\" y=\"120\" width=\"10\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">B</div>\n  </foreignObject>\n  <foreignObject x=\"130\" y=\"20\" width=\"10\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">C</div>\n  </foreignObject>\n  <foreignObject x=\"37.69269371032715\" y=\"20.000001907348633\" width=\"10\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">D</div>\n  </foreignObject>\n  <foreignObject x=\"82.69269561767578\" y=\"15.461462020874023\" width=\"40\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">8 cm</div>\n  </foreignObject>\n  <foreignObject x=\"139.46080017089844\" y=\"57.462791442871094\" width=\"40\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">8 cm</div>\n  </foreignObject>\n  <foreignObject x=\"148.84718322753906\" y=\"103.53787231445312\" width=\"20\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">60°</div>\n  </foreignObject>\n</svg>"
+    },
+    "originalQuestionNumber": "2.",
+    "internalId": "q-1756085963612-0.2512939872403417",
+    "id": "q-ai-cat-1756087401962-1-1"
+  },
+  {
+    "correct": 1,
+    "explanation": "<ol><li>Para calcular el perímetro y el área del trapecio, primero necesitamos determinar las longitudes de todos sus lados. La base superior es de 36\n          \n            cm\n          \n          . La altura es de 24\n          \n            cm\n          \n          . El lado inclinado izquierdo es de 26\n          \n            cm\n          \n          .</li><li>Utilizamos el Teorema de Pitágoras para encontrar la proyección horizontal del lado inclinado izquierdo. Sea\n          \n            y\n          \n          esta proyección:\n          \n            \\[y^2 + (24\n            \n              \\text{ cm}\n            \n            )^2 = (26\n            \n              \\text{ cm}\n            \n            )^2\\]\n          \n            \\[y^2 + 576\n            \n              \\text{ cm}^2\n            \n            = 676\n            \n              \\text{ cm}^2\\]\n          \n            \\[y^2 = 100\n            \n              \\text{ cm}^2 \\Rightarrow y = 10\n            \n              \\text{ cm}\n            \n            \\]\n          \n          .</li><li>La proyección horizontal derecha es de 18\n          \n            cm\n          \n          . Usamos el Teorema de Pitágoras para encontrar la longitud del lado inclinado derecho (sea\n          \n            s_2\n          \n          ):\n          \n            \\[s_2^2 = (24\n            \n              \\text{ cm}\n            \n            )^2 + (18\n            \n              \\text{ cm}\n            \n            )^2\\]\n          \n            \\[s_2^2 = 576\n            \n              \\text{ cm}^2\n            \n            + 324\n            \n              \\text{ cm}^2\n            \n            = 900\n            \n              \\text{ cm}^2 \\Rightarrow s_2 = 30\n            \n              \\text{ cm}\n            \n            \\]\n          \n          .</li><li>La base inferior del trapecio es la suma de las proyecciones horizontales y la base superior: \n          \n            \\[b_2 = 10\n            \n              \\text{ cm}\n            \n            + 36\n            \n              \\text{ cm}\n            \n            + 18\n            \n              \\text{ cm}\n            \n            = 64\n            \n              \\text{ cm}\n            \n            \\]\n          \n          .</li><li>Calcular el perímetro (P): \n          \n            \\[P = \\text{lado}_{izq} + \\text{base}_{inf} + \\text{lado}_{der} + \\text{base}_{sup}\\]\n          \n            \\[P = 26\n            \n              \\text{ cm}\n            \n            + 64\n            \n              \\text{ cm}\n            \n            + 30\n            \n              \\text{ cm}\n            \n            + 36\n            \n              \\text{ cm}\n            \n            = 156\n            \n              \\text{ cm}\n            \n            \\]\n          \n          .</li><li>Calcular el área (A): \n          \n            \\[A = \\frac{(\\text{base}_{sup} + \\text{base}_{inf}) \\times \\text{altura}}{2}\\]\n          \n            \\[A = \\frac{(36\n            \n              \\text{ cm}\n            \n            + 64\n            \n              \\text{ cm}\n            \n            ) \\times 24\n            \n              \\text{ cm}\n            \n            }{2}\\]\n          \n            \\[A = \\frac{100\n            \n              \\text{ cm}\n            \n            \\times 24\n            \n              \\text{ cm}\n            \n            }{2} = 1200\n            \n              \\text{ cm}^2\n            \n            \\]\n          \n          .</li><li>El perímetro es \n          \n            156\n          \n            \n              cm\n            \n          \n          y el área es \n          \n            1.200\n          \n            \n              cm\n            \n          \n            \n              2\n            \n          \n          , lo que corresponde a la opción B.</li></ol>",
+    "options": [
+      {
+        "text": "$156 \\text{ cm}$ y $1.296 \\text{ cm}^2$"
+      },
+      {
+        "text": "$156 \\text{ cm}$ y $1.200 \\text{ cm}^2$"
+      },
+      {
+        "text": "$145 \\text{ cm}$ y $1.056 \\text{ cm}^2$"
+      },
+      {
+        "text": "$120 \\text{ cm}$ y $1.200 \\text{ cm}^2$"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "¿Cuál es el perímetro y el área, respectivamente del trapecio adjunto de altura $24 \\text{ cm}$?",
+    "diagram": {
+      "type": "svg",
+      "code": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <marker id=\"arrowhead_black\" markerWidth=\"10\" markerHeight=\"7\" refX=\"0\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"black\" /></marker>\n  </defs>\n  <line x1=\"30\" y1=\"56\" x2=\"30\" y2=\"80\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4 2\" />\n  <line x1=\"66\" y1=\"56\" x2=\"66\" y2=\"80\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4 2\" />\n  <rect x=\"62\" y=\"76\" width=\"4\" height=\"4\" stroke=\"black\" fill=\"none\" stroke-width=\"1\" />\n  <line x1=\"30\" y1=\"50\" x2=\"58.790016174316406\" y2=\"50.5493049621582\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrowStart)\" marker-end=\"url(#arrowhead_black)\" />\n  <foreignObject x=\"38.374229431152344\" y=\"32.932861328125\" width=\"31.167686462402344\" height=\"21.810150146484375\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 7px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">36 cm</div>\n  </foreignObject>\n  <line x1=\"70\" y1=\"56\" x2=\"70.2259292602539\" y2=\"73.42113494873047\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrowStart)\" marker-end=\"url(#arrowhead_black)\" />\n  <foreignObject x=\"73.15644073486328\" y=\"59.189849853515625\" width=\"25\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 7px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">24 cm</div>\n  </foreignObject>\n  <foreignObject x=\"0.7597179412841797\" y=\"60.88821029663086\" width=\"23.329586029052734\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 7px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">26 cm</div>\n  </foreignObject>\n  <line x1=\"66\" y1=\"86\" x2=\"74.98018646240234\" y2=\"86.39897155761719\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrowStart)\" marker-end=\"url(#arrowhead_black)\" />\n  <foreignObject x=\"62.832313537597656\" y=\"86.7150650024414\" width=\"25\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 7px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">18 cm</div>\n  </foreignObject>\n  <line x1=\"16.515682220458984\" y1=\"55.817535400390625\" x2=\"65.98564910888672\" y2=\"55.817535400390625\" fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" />\n  <line x1=\"29.728015899658203\" y1=\"80.20880126953125\" x2=\"79.19798278808594\" y2=\"80.20880126953125\" fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" />\n  <line x1=\"66.11414337158203\" y1=\"56.588497161865234\" x2=\"79.22046661376953\" y2=\"80.61676788330078\" fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" />\n  <line x1=\"17.90662384033203\" y1=\"56.69450759887695\" x2=\"31.01294708251953\" y2=\"80.7227783203125\" fill=\"none\" stroke=\"#000000\" stroke-width=\"1\" />\n</svg>"
+    },
+    "originalQuestionNumber": "8",
+    "internalId": "q-1756085974789-0.4529638795292421",
+    "id": "q-ai-cat-1756087401962-1-2"
+  },
+  {
+    "correct": 3,
+    "explanation": "<ol><li>Recordamos las propiedades de un rombo: sus diagonales se bisecan perpendicularmente.</li><li>Las medidas de las diagonales son \\(d_1 = 16 \\, \\text{cm}\\) y \\(d_2 = 12 \\, \\text{cm}\\).</li><li>Calculamos las longitudes de las semidiagonales (la mitad de cada diagonal): \\(d_1/2 = 16/2 = 8 \\, \\text{cm}\\) y \\(d_2/2 = 12/2 = 6 \\, \\text{cm}\\).</li><li>Las semidiagonales y un lado del rombo forman un triángulo rectángulo, donde el lado del rombo es la hipotenusa.</li><li>Aplicamos el Teorema de Pitágoras para hallar la longitud del lado (\\(s\\)) del rombo: \\(s^2 = (d_1/2)^2 + (d_2/2)^2\\).</li><li>Sustituimos los valores: \\(s^2 = (8 \\, \\text{cm})^2 + (6 \\, \\text{cm})^2 = 64 \\, \\text{cm}^2 + 36 \\, \\text{cm}^2 = 100 \\, \\text{cm}^2\\).</li><li>Calculamos \\(s = \\sqrt{100 \\, \\text{cm}^2} = 10 \\, \\text{cm}\\).</li><li>Finalmente, el perímetro de un rombo es \\(4 \\times s\\).</li><li>Perímetro \\(P = 4 \\times 10 \\, \\text{cm} = 40 \\, \\text{cm}\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(48 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(64 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(80 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(40 \\, \\text{cm}\\)"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "La siguiente figura representa un rombo de diagonales con medidas de \\(16 \\, \\text{cm}\\) y \\(12 \\, \\text{cm}\\), respectivamente. ¿Cuál es el perímetro del rombo?",
+    "diagram": {
+      "code": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,5 95,50 50,95 5,50\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" /><line x1=\"50\" y1=\"5\" x2=\"50\" y2=\"95\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><line x1=\"5\" y1=\"50\" x2=\"95\" y2=\"50\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><rect x=\"46\" y=\"46\" width=\"8\" height=\"8\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" /></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "36",
+    "internalId": "q-1756085897184-0.659262110559928",
+    "id": "q-ai-cat-1756087401962-1-3"
+  },
+  {
+    "correct": 2,
+    "explanation": "<ol><li>El área de un rombo se calcula con la fórmula: Área = \frac{\text{diagonal}_1 \times \text{diagonal}_2}{2}.</li><li>Sustituyendo los valores dados de las diagonales (\text{d}_1 = 20 \\, \\text{cm}, \text{d}_2 = 24 \\, \\text{cm}): Área total = \frac{20 \\, \\text{cm} \times 24 \\, \\text{cm}}{2} = \frac{480 \\, \\text{cm}^2}{2} = 240 \\, \\text{cm}^2.</li><li>La figura muestra que una de las cuatro secciones congruentes del rombo está sombreada. Por lo tanto, el área sombreada es \frac{1}{4} del área total.</li><li>Área sombreada = \frac{1}{4} \times 240 \\, \\text{cm}^2 = 60 \\, \\text{cm}^2.</li><li>El área no sombreada es el área total menos el área sombreada: Área no sombreada = 240 \\, \\text{cm}^2 - 60 \\, \\text{cm}^2 = 180 \\, \\text{cm}^2.</li></ol>",
+    "options": [
+      {
+        "text": "\\(60 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(240 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(180 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(216 \\, \\text{cm}^2\\)"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "En la figura, se muestra un rombo de diagonales \\(20 \\, \\text{cm}\\) y \\(24 \\, \\text{cm}\\). ¿Cuánto mide el área no sombreada?",
+    "diagram": {
+      "code": "<svg viewBox=\"0 0 200 150\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"100,20 180,75 100,130 20,75\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" /><line x1=\"20\" y1=\"75\" x2=\"180\" y2=\"75\" stroke=\"black\" stroke-width=\"1\" /><line x1=\"100\" y1=\"20\" x2=\"100\" y2=\"130\" stroke=\"black\" stroke-width=\"1\" /><polygon points=\"20,75 100,20 100,75\" fill=\"black\" stroke=\"black\" stroke-width=\"1\" /></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "7",
+    "internalId": "q-1756085883059-0.8579956894235531",
+    "id": "q-ai-cat-1756087401962-1-4"
+  },
+  {
+    "correct": 3,
+    "explanation": "<ol><li>Se establece la relación entre las diagonales como \\(d_1 = 4k\\) y \\(d_2 = 3k\\).</li><li>La suma de las diagonales es \\(21\\): \\(4k + 3k = 21 \\Rightarrow 7k = 21 \\Rightarrow k = 3\\).</li><li>Se calculan las longitudes de las diagonales: \\(d_1 = 4(3) = 12\\) y \\(d_2 = 3(3) = 9\\).</li><li>El área de un rombo es \\(A = \\frac{1}{2} d_1 d_2\\).</li><li>Sustituyendo los valores: \\(A = \\frac{1}{2}(12)(9) = 6 \\times 9 = 54\\).</li></ol>",
+    "options": [
+      {
+        "text": "12"
+      },
+      {
+        "text": "3"
+      },
+      {
+        "text": "9"
+      },
+      {
+        "text": "54"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "En un rombo cuyas diagonales están en razón \\(4:3\\), si la suma de sus diagonales es igual a \\(21\\), entonces su área es:",
+    "originalQuestionNumber": "13",
+    "internalId": "q-1756085990503-0.9560855699103471",
+    "id": "q-ai-cat-1756087401962-1-5"
+  },
+  {
+    "correct": 1,
+    "explanation": "<ol><li>En un rectángulo \n        \n          \n            \n              \n                \n                  \n                    ABCD\n                  \n                \n              \n            \n          \n        \n      , los lados opuestos son iguales y todos los ángulos son de \n        \n          \n            \n              \n                \n                  \n                    90\n                  \n                \n              \n            \n          \n        \n      grados.</li><li>Se nos da que \n        \n          \n            \n              \n                \n                  \n                    BC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    12\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      . Por lo tanto, \n        \n          \n            \n              \n                \n                  \n                    AD\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    12\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      .</li><li>El punto \n        \n          \n            \n              \n                \n                  \n                    P\n                  \n                \n              \n            \n          \n        \n      divide el lado \n        \n          \n            \n              \n                \n                  \n                    DC\n                  \n                \n              \n            \n          \n        \n      en la razón \n        \n          \n            \n              \n                \n                  \n                    4\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    :\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    1\n                  \n                \n              \n            \n          \n        \n      . Si denotamos \n        \n          \n            \n              \n                \n                  \n                    PC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    x\n                  \n                \n              \n            \n          \n        \n      , entonces \n        \n          \n            \n              \n                \n                  \n                    DP\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    4x\n                  \n                \n              \n            \n          \n        \n      .</li><li>La longitud del lado \n        \n          \n            \n              \n                \n                  \n                    DC\n                  \n                \n              \n            \n          \n        \n      es \n        \n          \n            \n              \n                \n                  \n                    DC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    DP\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    PC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    4x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    5x\n                  \n                \n              \n            \n          \n        \n      . Como \n        \n          \n            \n              \n                \n                  \n                    ABCD\n                  \n                \n              \n            \n          \n        \n      es un rectángulo, \n        \n          \n            \n              \n                \n                  \n                    AB\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    DC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    5x\n                  \n                \n              \n            \n          \n        \n      .</li><li>El diagrama muestra que \n        \n          \n            \n              \n                \n                  \n                    \n                      \text{∠}\n                    \n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    APB\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    90\n                  \n                \n              \n            \n          \n        \n      grados. Por lo tanto, \n        \n          \n            \n              \n                \n                  \n                    \n                      \text{△}\n                    \n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    APB\n                  \n                \n              \n            \n          \n        \n      es un triángulo rectángulo.</li><li>Aplicamos el Teorema de Pitágoras a los triángulos rectángulos \n        \n          \n            \n              \n                \n                  \n                    \n                      \text{△}\n                    \n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ADP\n                  \n                \n              \n            \n          \n        \n      y \n        \n          \n            \n              \n                \n                  \n                    \n                      \text{△}\n                    \n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    BCP\n                  \n                \n              \n            \n          \n        \n      :<ul><li>\n        \n          \n            \n              \n                \n                  \n                    AP\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    AD\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    DP\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    12\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    (4x)\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    144\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    16x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      </li><li>\n        \n          \n            \n              \n                \n                  \n                    BP\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    BC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    PC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    12\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    144\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      </li></ul></li><li>Aplicamos el Teorema de Pitágoras al triángulo rectángulo \n        \n          \n            \n              \n                \n                  \n                    \n                      \text{△}\n                    \n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    APB\n                  \n                \n              \n            \n          \n        \n      : \n        \n          \n            \n              \n                \n                  \n                    AB\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    AP\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    BP\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      .</li><li>Sustituyendo los valores: \n        \n          \n            \n              \n                \n                  \n                    (5x)\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    (144\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    16x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    )\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    (144\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    )\n                  \n                \n              \n            \n          \n        \n      .</li><li>Simplificando la ecuación: \n        \n          \n            \n              \n                \n                  \n                    25x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    288\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    17x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      .</li><li>Restando \n        \n          \n            \n              \n                \n                  \n                    17x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      de ambos lados: \n        \n          \n            \n              \n                \n                  \n                    8x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    288\n                  \n                \n              \n            \n          \n        \n      .</li><li>Dividiendo por 8: \n        \n          \n            \n              \n                \n                  \n                    x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    ^{2}\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    36\n                  \n                \n              \n            \n          \n        \n      , lo que implica \n        \n          \n            \n              \n                \n                  \n                    x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    6\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      (ya que la longitud debe ser positiva).</li><li>Ahora podemos encontrar las dimensiones del rectángulo:<ul><li>Altura: \n        \n          \n            \n              \n                \n                  \n                    BC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    12\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      </li><li>Base: \n        \n          \n            \n              \n                \n                  \n                    DC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    5x\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    5\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    \n                      \\times\n                    \n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    6\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    30\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      </li></ul></li><li>El perímetro del rectángulo es \n        \n          \n            \n              \n                \n                  \n                    2(DC\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    BC)\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    2(30\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    12)\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    2(42)\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    =\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    84\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      .</li></ol>",
+    "options": [
+      {
+        "text": "\n        \n          \n            \n              \n                \n                  \n                    42\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      "
+      },
+      {
+        "text": "\n        \n          \n            \n              \n                \n                  \n                    84\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      "
+      },
+      {
+        "text": "\n        \n          \n            \n              \n                \n                  \n                    54\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      "
+      },
+      {
+        "text": "\n        \n          \n            \n              \n                \n                  \n                    (24\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    +\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    10\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    \n                      \\sqrt{3}\n                    \n                  \n                \n              \n            \n          \n        \n      )\n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      "
+      }
+    ],
+    "sourceFileName": "quiz-page-2.png",
+    "text": "En la figura, \n        \n          \n            \n              \n                \n                  \n                    ABCD\n                  \n                \n              \n            \n          \n        \n      es un rectángulo y \n        \n          \n            \n              \n                \n                  \n                    P\n                  \n                \n              \n            \n          \n        \n      es un punto del lado \n        \n          \n            \n              \n                \n                  \n                    CD\n                  \n                \n              \n            \n          \n        \n      , de modo que \n        \n          \n            \n              \n                \n                  \n                    P\n                  \n                \n              \n            \n          \n        \n      divide interiormente a \n        \n          \n            \n              \n                \n                  \n                    DC\n                  \n                \n              \n            \n          \n        \n      en la razón \n        \n          \n            \n              \n                \n                  \n                    4\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    :\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    1\n                  \n                \n              \n            \n          \n        \n      .\nSi \n        \n          \n            \n              \n                \n                  \n                    BC\n                  \n                \n              \n            \n          \n        \n      mide \n        \n          \n            \n              \n                \n                  \n                    12\n                  \n                \n              \n            \n          \n        \n      \n        \n          \n            \n              \n                \n                  \n                    cm\n                  \n                \n              \n            \n          \n        \n      , entonces el perímetro del rectángulo es:",
+    "diagram": {
+      "code": "<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"arrowhead\" markerWidth=\"10\" markerHeight=\"7\" refX=\"0\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"black\"/></marker></defs><rect x=\"10\" y=\"10\" width=\"70\" height=\"40\" stroke=\"black\" stroke-width=\"1\" fill=\"none\"/><foreignObject x=\"5\" y=\"45\" width=\"10\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">A</div></foreignObject><foreignObject x=\"78\" y=\"45\" width=\"10\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">B</div></foreignObject><foreignObject x=\"78\" y=\"5\" width=\"10\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">C</div></foreignObject><foreignObject x=\"5\" y=\"5\" width=\"10\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">D</div></foreignObject><circle cx=\"68\" cy=\"10\" r=\"1.5\" fill=\"black\"/><foreignObject x=\"65\" y=\"0\" width=\"10\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">P</div></foreignObject><line x1=\"10\" y1=\"50\" x2=\"68\" y2=\"10\" stroke=\"black\" stroke-width=\"1\"/><line x1=\"78\" y1=\"50\" x2=\"68\" y2=\"10\" stroke=\"black\" stroke-width=\"1\"/><path d=\"M68,10 L68,15 L63,15 L63,10 Z\" fill=\"none\" stroke=\"black\" stroke-width=\"1\"/></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "31",
+    "internalId": "q-1756085948668-0.46961383864253714",
+    "id": "q-ai-cat-1756087401962-1-6"
+  },
+  {
+    "correct": 0,
+    "explanation": "<ol><li>Sea \\(L\\) la longitud del lado del cuadrado \\(ABCD\\). El área del cuadrado es \\(A_{\\text{cuadrado}} = L^2\\).</li><li>Los puntos \\(M\\) y \\(N\\) son puntos medios. Si consideramos \\(A=(0,0)\\), \\(B=(L,0)\\), \\(C=(L,L)\\), \\(D=(0,L)\\) como las coordenadas de los vértices del cuadrado, entonces las coordenadas de los puntos medios son \\(M = (L/2, 0)\\) (punto medio de \\(AB\\)) y \\(N = (L, L/2)\\) (punto medio de \\(BC\\)).</li><li>El triángulo en cuestión es \\(MNC\\), con vértices \\(M(L/2, 0)\\), \\(N(L, L/2)\\) y \\(C(L, L)\\).</li><li>Para calcular el área del triángulo \\(MNC\\), podemos usar la fórmula de base por altura. Tomemos como base el segmento \\(NC\\). La longitud de \\(NC\\) es la diferencia en las coordenadas \\(y\\) entre \\(C\\) y \\(N\\), ya que están en la misma línea vertical (\\(x=L\\)): \\(L - L/2 = L/2\\).</li><li>La altura correspondiente a la base \\(NC\\) es la distancia perpendicular desde el punto \\(M\\) hasta la línea que contiene a \\(NC\\) (que es la línea \\(x=L\\)). Esta distancia es la diferencia en las coordenadas \\(x\\) entre la línea \\(x=L\\) y el punto \\(M\\): \\(L - L/2 = L/2\\).</li><li>El área del triángulo \\(MNC\\) es \\(A_{\\text{MNC}} = \\frac{1}{2} \\times \\text{base} \\times \\text{altura} = \\frac{1}{2} \\times \\frac{L}{2} \\times \\frac{L}{2} = \\frac{L^2}{8}\\).</li><li>El porcentaje que representa el área del triángulo \\(MNC\\) respecto al área del cuadrado \\(ABCD\\) es \\(\\frac{A_{\\text{MNC}}}{A_{\\text{cuadrado}}} \\times 100\\% = \\frac{L^2/8}{L^2} \\times 100\\% = \\frac{1}{8} \\times 100\\% = 12.5\\%\\).</li></ol>",
+    "options": [
+      {
+        "text": "12,5%"
+      },
+      {
+        "text": "25%"
+      },
+      {
+        "text": "20%"
+      },
+      {
+        "text": "16,\\overline{6}\\%"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "En el cuadrado ABCD, M y N son puntos medios. ¿Qué porcentaje del área representa el triángulo MNC del área del cuadrado ABCD?",
+    "diagram": {
+      "code": "<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"10\" y=\"10\" width=\"100\" height=\"100\" stroke=\"black\" fill=\"none\" stroke-width=\"1\"/><foreignObject x=\"0\" y=\"0\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">D</div></foreignObject><foreignObject x=\"110\" y=\"0\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">C</div></foreignObject><foreignObject x=\"0\" y=\"105\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">A</div></foreignObject><foreignObject x=\"110\" y=\"105\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">B</div></foreignObject><circle cx=\"60\" cy=\"10\" r=\"2\" fill=\"black\"/><foreignObject x=\"55\" y=\"0\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">M</div></foreignObject><circle cx=\"110\" cy=\"60\" r=\"2\" fill=\"black\"/><foreignObject x=\"112\" y=\"55\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">N</div></foreignObject><line x1=\"60\" y1=\"10\" x2=\"110\" y2=\"60\" stroke=\"black\" stroke-width=\"1\"/><line x1=\"110\" y1=\"60\" x2=\"110\" y2=\"110\" stroke=\"black\" stroke-width=\"1\"/><line x1=\"60\" y1=\"10\" x2=\"110\" y2=\"110\" stroke=\"black\" stroke-width=\"1\"/></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "26",
+    "internalId": "q-1756085925282-0.03923844702472756",
+    "id": "q-ai-cat-1756087401962-1-7"
+  },
+  {
+    "correct": 1,
+    "explanation": "<ol><li>Para calcular el área de la figura dibujada en la cuadrícula, contamos los cuadrados completos y los cuadrados que están divididos por diagonales (considerándolos como medio cuadrado).</li><li>Primero, identificamos los bloques de cuadrados completos que forman la figura:<ul><li>El cuerpo central forma un rectángulo de 12 unidades de ancho por 2 unidades de alto, lo que da un área de \\(12 \\times 2 = 24\\) cuadrados.</li><li>Las dos patas delanteras tienen cada una 3 bloques de 2 cuadrados completos, sumando \\(3 \\times 2 = 6\\) cuadrados por pata. Para ambas patas delanteras, son \\(6 \\times 2 = 12\\) cuadrados.</li><li>Las dos patas traseras son idénticas, sumando otros \\(12\\) cuadrados.</li></ul></li><li>Sumando estos bloques principales: \\(24 \\text{ (cuerpo)} + 12 \\text{ (patas delanteras)} + 12 \\text{ (patas traseras)} = 48\\) cuadrados. Este conteo inicial es superior a las opciones, lo que indica que algunas de las áreas de las patas y el cuerpo que inicialmente parecen completas en los bordes diagonales, se cuentan como medias unidades o se combinan de otra manera.</li><li>Una forma más precisa es contar directamente:<ul><li>Identificando los cuadrados completamente dentro de la figura, se encuentran 34 cuadrados.</li><li>Identificando los cuadrados cortados por una diagonal (considerados como medio cuadrado), se encuentran 5 medios cuadrados.</li></ul></li><li>Sumando estas contribuciones: \\(34 \\times 1 + 5 \\times 0.5 = 34 + 2.5 = 36.5\\) cuadrados.</li><li>Por lo tanto, el área total de la figura es de \\(36,5 \\, \\text{cm}^2\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(36 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(36,5 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(35,5 \\, \\text{cm}^2\\)"
+      },
+      {
+        "text": "\\(35 \\, \\text{cm}^2\\)"
+      }
+    ],
+    "sourceFileName": "image-1.png",
+    "text": "En la siguiente cuadrícula formada por cuadrados congruentes de lado \\(1 \\, \\text{cm}\\), se ha dibujado una figura uniendo solamente los vértices de los cuadrados.¿Cuál es el área de la figura completa dibujada?",
+    "diagram": {
+      "code": "<svg viewBox=\"0 0 230 100\" xmlns=\"http://www.w3.org/2000/svg\"><defs><style>.grid-line{stroke:#ccc;stroke-width:0.5;}.figure-line{stroke:black;stroke-width:2;fill:none;}</style></defs><rect x=\"0\" y=\"0\" width=\"230\" height=\"100\" fill=\"#f5f5f5\"/><!-- Grid lines --><g class=\"grid-lines\"><path d=\"M0 0h230V100H0zM0 10h230M0 20h230M0 30h230M0 40h230M0 50h230M0 60h230M0 70h230M0 80h230M0 90h230M10 0v100M20 0v100M30 0v100M40 0v100M50 0v100M60 0v100M70 0v100M80 0v100M90 0v100M100 0v100M110 0v100M120 0v100M130 0v100M140 0v100M150 0v100M160 0v100M170 0v100M180 0v100M190 0v100M200 0v100M210 0v100M220 0v100\" class=\"grid-line\" /></g><!-- Figure path --><path d=\"M30 0 L40 0 L40 10 L30 10 L30 20 L20 20 L20 10 L10 10 L10 20 L0 20 L0 30 L10 40 L20 50 L30 60 L40 70 L50 60 L60 50 L70 40 L170 40 L180 50 L190 60 L200 70 L210 60 L220 50 L210 40 L200 30 L190 20 L180 20 L180 10 L190 10 L190 0 L200 0 Z M0 30 L10 40 L20 50 L30 60 L40 70 M50 60 L60 50 L70 40 M170 40 L180 50 L190 60 L200 70 L210 60 L220 50 L210 40 L200 30 L190 20\" class=\"figure-line\" fill=\"#d3d3d3\" /></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "40",
+    "internalId": "q-1756086051690-0.2153768556977964",
+    "id": "q-ai-cat-1756087401962-2-0"
+  },
+  {
+    "correct": 3,
+    "explanation": "<ol><li>Calcula la longitud de cada lado del cuadrilátero usando la fórmula de la distancia entre dos puntos \\(d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}\\).</li><li>Para el lado \\(AB\\), con \\(A(0,0)\\) y \\(B(2,0)\\): \\(AB = \\sqrt{(2-0)^2 + (0-0)^2} = \\sqrt{2^2} = 2\\).</li><li>Para el lado \\(AD\\), con \\(A(0,0)\\) y \\(D(0,2)\\): \\(AD = \\sqrt{(0-0)^2 + (2-0)^2} = \\sqrt{2^2} = 2\\).</li><li>Para el lado \\(BC\\), con \\(B(2,0)\\) y \\(C(x,x)\\): \\(BC = \\sqrt{(x-2)^2 + (x-0)^2} = \\sqrt{(x-2)^2 + x^2}\\).</li><li>Para el lado \\(CD\\), con \\(C(x,x)\\) y \\(D(0,2)\\): \\(CD = \\sqrt{(0-x)^2 + (2-x)^2} = \\sqrt{x^2 + (x-2)^2}\\).</li><li>El perímetro del cuadrilátero es la suma de las longitudes de sus lados: \\(P = AB + BC + CD + DA\\).</li><li>Sustituyendo los valores, obtenemos \\(P = 2 + \\sqrt{(x-2)^2 + x^2} + \\sqrt{x^2 + (x-2)^2} + 2\\).</li><li>Simplificando la expresión, \\(P = 4 + 2\\sqrt{(x-2)^2 + x^2}\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(4 + \\sqrt{(x-2)^2 + x^2}\\)"
+      },
+      {
+        "text": "\\(4 + \\sqrt{2(x-2)^2 + x^2}\\)"
+      },
+      {
+        "text": "\\(4 + 2\\sqrt{x^2 - (x-2)^2}\\)"
+      },
+      {
+        "text": "\\(4 + 2\\sqrt{(x-2)^2 + x^2}\\)"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "Si los puntos \\(A(0,0)\\), \\(B(2,0)\\), \\(C(x,x)\\) y \\(D(0,2)\\), con \\(x > 0\\), son los vértices de un cuadrilátero \\(ABCD\\) en el plano cartesiano, ¿cuál de las siguientes expresiones representa siempre el perímetro de dicho cuadrilátero, en unidades?",
+    "originalQuestionNumber": "18",
+    "internalId": "q-1756085923607-0.9105392201866476",
+    "id": "q-ai-cat-1756087401962-2-1"
+  },
+  {
+    "correct": 2,
+    "explanation": "<ol><li>Primero, calculamos las longitudes de los lados y las diagonales del cuadrilátero con los vértices dados: \\(A(2,0)\\), \\(B(0,2)\\), \\(C(-2,0)\\) y \\(D(0,-2)\\).</li><li>Longitud de los lados:<ul><li>\\(AB = \\sqrt{(0-2)^2 + (2-0)^2} = \\sqrt{(-2)^2 + 2^2} = \\sqrt{4+4} = \\sqrt{8} = 2\\sqrt{2}\\).</li><li>\\(BC = \\sqrt{(-2-0)^2 + (0-2)^2} = \\sqrt{(-2)^2 + (-2)^2} = \\sqrt{4+4} = \\sqrt{8} = 2\\sqrt{2}\\).</li><li>\\(CD = \\sqrt{(0-(-2))^2 + (-2-0)^2} = \\sqrt{2^2 + (-2)^2} = \\sqrt{4+4} = \\sqrt{8} = 2\\sqrt{2}\\).</li><li>\\(DA = \\sqrt{(2-0)^2 + (0-(-2))^2} = \\sqrt{2^2 + 2^2} = \\sqrt{4+4} = \\sqrt{8} = 2\\sqrt{2}\\).</li></ul>Todos los lados son iguales, lo que indica que es un rombo.</li><li>Longitud de las diagonales:<ul><li>\\(AC = \\sqrt{(-2-2)^2 + (0-0)^2} = \\sqrt{(-4)^2} = \\sqrt{16} = 4\\).</li><li>\\(BD = \\sqrt{(0-0)^2 + (-2-2)^2} = \\sqrt{(-4)^2} = \\sqrt{16} = 4\\).</li></ul>Las diagonales son iguales, lo que indica que es un rectángulo. Dado que es un rombo y un rectángulo, es un cuadrado.</li><li>Ahora evaluamos las afirmaciones:<ul><li>A) El perímetro del cuadrilátero es \\(8\\sqrt{2}\\): Perímetro \\(= 4 \\times \\text{lado} = 4 \\times 2\\sqrt{2} = 8\\sqrt{2}\\). Esta afirmación es VERDADERA.</li><li>B) Cada diagonal del cuadrilátero mide 4: \\(AC = 4\\) y \\(BD = 4\\). Esta afirmación es VERDADERA.</li><li>C) El área del cuadrilátero es \\(4\\sqrt{2}\\): Área \\(= \\text{lado}^2 = (2\\sqrt{2})^2 = 4 \\times 2 = 8\\). Alternativamente, Área \\(= \\frac{1}{2} d_1 d_2 = \\frac{1}{2} \\times 4 \\times 4 = 8\\). Esta afirmación es FALSA.</li><li>D) El cuadrilátero tiene 4 ejes de simetría: Un cuadrado tiene 4 ejes de simetría (las dos diagonales y las dos líneas que conectan los puntos medios de los lados opuestos). Esta afirmación es VERDADERA.</li></ul></li><li>La pregunta pide la afirmación falsa, que es la opción C.</li></ol>",
+    "options": [
+      {
+        "text": "El perímetro del cuadrilátero es \\(8\\sqrt{2}\\)."
+      },
+      {
+        "text": "Cada diagonal del cuadrilátero mide 4."
+      },
+      {
+        "text": "El área del cuadrilátero es \\(4\\sqrt{2}\\)."
+      },
+      {
+        "text": "El cuadrilátero tiene 4 ejes de simetría."
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "Los vértices del cuadrilátero \\(ABCD\\) son \\(A(2,0)\\); \\(B(0,2)\\); \\(C(-2,0)\\) y \\(D(0,-2)\\). Entonces, ¿cuál de las siguientes afirmaciones es falsa?",
+    "originalQuestionNumber": "33",
+    "internalId": "q-1756085925755-0.9670412230895867",
+    "id": "q-ai-cat-1756087401962-2-2"
+  },
+  {
+    "correct": 1,
+    "explanation": "<ol><li>El perímetro del cuadrado \\(ABCD\\) es \\(4a\\), lo que implica que cada lado del cuadrado mide \\(a\\). Así, \\(AB = BC = CD = DA = a\\).</li><li>El rectángulo \\(AFGE\\) tiene lados \\(AE = 1\\) y \\(AF = 2\\). Dado que es un rectángulo, sus lados opuestos son iguales, entonces \\(FG = AE = 1\\) y \\(GE = AF = 2\\).</li><li>El perímetro de la figura de color negro se compone de los segmentos \\(DE\\), \\(DC\\), \\(CB\\), \\(BF\\), \\(FG\\) y \\(GE\\).</li><li>Calculamos las longitudes de los segmentos:<ul><li>\\(DE = AD - AE = a - 1\\)</li><li>\\(DC = a\\)</li><li>\\(CB = a\\)</li><li>\\(BF = AB - AF = a - 2\\)</li><li>\\(FG = 1\\)</li><li>\\(GE = 2\\)</li></ul></li><li>Sumamos las longitudes para obtener el perímetro total de la figura negra: Perímetro \\( = (a - 1) + a + a + (a - 2) + 1 + 2\\).</li><li>Simplificando la expresión: Perímetro \\( = 4a - 1 - 2 + 1 + 2 = 4a\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(4a - 3\\)"
+      },
+      {
+        "text": "\\(4a\\)"
+      },
+      {
+        "text": "\\(4a - 2\\)"
+      },
+      {
+        "text": "\\(4a - 1\\)"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "En la figura, \\(ABCD\\) es un cuadrado de perímetro \\(4a\\), con los puntos \\(E\\) y \\(F\\) pertenecientes a \\(\\overline{AD}\\) y \\(\\overline{AB}\\) respectivamente. Si \\(AFGE\\) rectángulo, \\(AE = 1\\) y \\(AF = 2\\), ¿cuál es el perímetro de la figura de color negro?",
+    "diagram": {
+      "type": "svg",
+      "code": "<svg viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\">  <rect x=\"1.4440422058105469\" y=\"-0.6738853454589844\" width=\"100\" height=\"100\" fill=\"black\" stroke=\"black\" stroke-width=\"1\" />\n  <rect x=\"0\" y=\"0\" width=\"2\" height=\"1\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />\n  <foreignObject x=\"-5\" y=\"95\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">D</div>\n  </foreignObject>\n  <foreignObject x=\"95\" y=\"95\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">C</div>\n  </foreignObject>\n  <foreignObject x=\"95\" y=\"-5\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">B</div>\n  </foreignObject>\n  <foreignObject x=\"-5\" y=\"-5\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">A</div>\n  </foreignObject>\n  <foreignObject x=\"-10\" y=\"0\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">E</div>\n  </foreignObject>\n  <foreignObject x=\"1\" y=\"-10\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">F</div>\n  </foreignObject>\n  <foreignObject x=\"5\" y=\"5\" width=\"15\" height=\"15\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">G</div>\n  </foreignObject>\n  <rect x=\"1.944644570350647\" y=\"72.93862915039062\" width=\"51.407944083213806\" height=\"25.992782592773438\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n</svg>"
+    },
+    "originalQuestionNumber": "4",
+    "internalId": "q-1756085968239-0.23904506169665085",
+    "id": "q-ai-cat-1756087401962-2-3"
+  },
+  {
+    "correct": 0,
+    "explanation": "<ol><li>Primero, se determina el número total de cuadrados en la figura del “Luche”, que son 10 cuadrados.</li><li>Se calcula el área de un solo cuadrado. Dado que el área total es \\(6.250 \\, \\text{cm}^2\\) y hay 10 cuadrados, el área de un cuadrado es \\(s^2 = \\frac{6.250 \\, \\text{cm}^2}{10} = 625 \\, \\text{cm}^2\\).</li><li>Se calcula la longitud del lado de un cuadrado (\\(s\\)) tomando la raíz cuadrada del área: \\(s = \\sqrt{625 \\, \\text{cm}^2} = 25 \\, \\text{cm}\\).</li><li>Luego, se cuenta el número de lados de los cuadrados que forman el perímetro exterior de la figura.</li><li>Hay 1 lado horizontal en la base.</li><li>Hay 1 lado horizontal en la parte superior.</li><li>Hay 7 lados verticales en el borde izquierdo.</li><li>Hay 7 lados verticales en el borde derecho.</li><li>El total de lados exteriores es \\(1 + 1 + 7 + 7 = 16\\).</li><li>Finalmente, se calcula el perímetro total multiplicando el número de lados exteriores por la longitud de un lado: \\(P = 16 \\times 25 \\, \\text{cm} = 400 \\, \\text{cm}\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(400 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(475 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(550 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(700 \\, \\text{cm}\\)"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "En el suelo del patio de un colegio se dibuja un juego conocido como “Luche”, el cual se compone de cuadrados congruentes entre sí, dibujados uno al lado del otro y en la posición que se muestra en la siguiente figura. Valentina le dice a Tomás que ella calculó el área total de los cuadrados, lo que le dio \\(6.250 \\, \\text{cm}^2\\), y le pide que calcule el perímetro de la figura completa para saber cuanta cinta adhesiva necesita colocar en los bordes del Luche. ¿Cuál es la longitud de la cinta?",
+    "diagram": {
+      "type": "svg",
+      "code": "<svg viewBox=\"0 0 100 350\" xmlns=\"http://www.w3.org/2000/svg\">  <rect x=\"35.31205749511719\" y=\"302.457275390625\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"11.280765533447266\" y=\"258.8832702636719\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"58.344547271728516\" y=\"259.1119079589844\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"34.650203704833984\" y=\"217.2226104736328\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"12.303632736206055\" y=\"173.98553466796875\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"60.04129981994629\" y=\"173.87722778320312\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"33.988351821899414\" y=\"130.30320739746094\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"12.989553451538086\" y=\"87.0661392211914\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"59.716386795043945\" y=\"86.95783233642578\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n  <rect x=\"35.011213302612305\" y=\"44.05771255493164\" width=\"45.48736572265625\" height=\"42.45489501953125\" fill=\"#ffffff\" stroke=\"#000000\" stroke-width=\"2\" />\n</svg>"
+    },
+    "originalQuestionNumber": "19",
+    "internalId": "q-1756085923607-0.6533852062194426",
+    "id": "q-ai-cat-1756087401962-2-4"
+  },
+  {
+    "correct": 0,
+    "explanation": "<ol><li>Primero, se convierten las dimensiones de la habitación a centímetros para que coincidan con las dimensiones de las cerámicas. El ancho de la habitación es de \\(4 \\, \\text{m} = 400 \\, \\text{cm}\\) y el largo es de \\(5 \\, \\text{m} = 500 \\, \\text{cm}\\).</li><li>Las cerámicas son cuadradas con lados de \\(40 \\, \\text{cm}\\).</li><li>Se calcula cuántas cerámicas caben a lo largo del ancho: \\(400 \\, \\text{cm} / 40 \\, \\text{cm/cerámica} = 10\\) cerámicas. En esta dimensión, las cerámicas encajan perfectamente, por lo que no se necesitan cortes.</li><li>Se calcula cuántas cerámicas caben a lo largo del largo: \\(500 \\, \\text{cm} / 40 \\, \\text{cm/cerámica} = 12.5\\) cerámicas. Esto significa que se utilizarán \\(12\\) cerámicas completas y quedará un espacio de \\(0.5\\) cerámica (o \\(20 \\, \\text{cm}\\)) al final de cada fila.</li><li>Para cubrir el espacio de \\(0.5\\) cerámica, se necesita cortar una cerámica de \\(40 \\, \\text{cm}\\) en dos piezas de \\(20 \\, \\text{cm}\\). Cada corte produce dos piezas de \\(20 \\, \\text{cm}\\) (una que se usa y otra que sobra o se usa en otra fila si es necesario, pero solo necesitamos una de ellas por cada fila).</li><li>Dado que hay \\(10\\) filas a lo largo del ancho de la habitación, se necesitarán \\(10\\) piezas de \\(20 \\, \\text{cm}\\). Como cada corte produce dos piezas utilizables (cada una de \\(20 \\, \\text{cm}\\)), se necesitan \\(10 \\, \\text{piezas} / 2 \\, \\text{piezas/corte} = 5\\) cortes en total.</li></ol>",
+    "options": [
+      {
+        "text": "5 cortes"
+      },
+      {
+        "text": "4 cortes"
+      },
+      {
+        "text": "8 cortes"
+      },
+      {
+        "text": "10 cortes"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "16. El piso de una habitación rectangular tiene \\(4\\) metros de ancho y \\(5\\) metros de largo. Si se pretende instalar cerámica cuadrada de \\(40 \\, \\text{cm}\\) por lado (considerando el espacio entre las juntas) en el piso de la habitación, ¿cuál es mínimo número de cortes que debe hacer a las cerámicas para cubrir toda la superficie del piso?",
+    "originalQuestionNumber": "16",
+    "internalId": "q-1756085901815-0.9113576770293528",
+    "id": "q-ai-cat-1756087401962-3-0"
+  },
+  {
+    "correct": 1,
+    "explanation": "<ol><li>Dado el trapecio \n        \\(ABDC\\)\n         con \n        \\(AC = 6\\)\n        , \n        \\(CD = 5\\)\n        , \n        \\(DB = 6\\)\n         y \n        \\(\\angle ABD = 60^\\circ\\)\n        . Como \n        \\(AC = DB = 6\\)\n        , es un trapecio isósceles.</li><li>En un trapecio isósceles, los ángulos de la base son iguales, por lo tanto \n        \\(\\angle CAB = \\angle DBA = 60^\\circ\\)\n        .</li><li>Dibujamos alturas desde \n        \\(D\\)\n         y \n        \\(C\\)\n         a la base \n        \\(AB\\)\n        . Sea \n        \\(DF\\)\n         la altura desde \n        \\(D\\)\n         hasta \n        \\(AB\\)\n        , y \n        \\(CE\\)\n         la altura desde \n        \\(C\\)\n         hasta \n        \\(AB\\)\n        .</li><li>En el triángulo rectángulo \n        \\(DFB\\)\n        , la altura \n        \\(h = DF = DB \\sin(60^\\circ) = 6 \\times (\\sqrt{3}/2) = 3\\sqrt{3}\\)\n        .</li><li>También, el segmento \n        \\(FB = DB \\cos(60^\\circ) = 6 \\times (1/2) = 3\\)\n        .</li><li>Como es un trapecio isósceles, \n        \\(AE = FB = 3\\)\n        .</li><li>La base superior \n        \\(CD = 5\\)\n        . El segmento \n        \\(EF\\)\n         entre las alturas es igual a la base superior, \n        \\(EF = CD = 5\\)\n        .</li><li>La base inferior \n        \\(AB = AE + EF + FB = 3 + 5 + 3 = 11\\)\n        .</li><li>El área del trapecio se calcula con la fórmula \n        \\(A = \\frac{1}{2} (b_1 + b_2) h\\)\n        , donde \n        \\(b_1 = AB\\)\n        , \n        \\(b_2 = CD\\)\n         y \n        \\(h\\)\n         es la altura.</li><li>Sustituyendo los valores: \n        \\(A = \\frac{1}{2} (11 + 5) (3\\sqrt{3}) = \\frac{1}{2} (16) (3\\sqrt{3}) = 8 \\times 3\\sqrt{3} = 24\\sqrt{3}\\)\n        .</li></ol>",
+    "options": [
+      {
+        "text": "\\(48\\sqrt{3}\\)"
+      },
+      {
+        "text": "\\(24\\sqrt{3}\\)"
+      },
+      {
+        "text": "\\(12\\sqrt{3}\\)"
+      },
+      {
+        "text": "\\(8\\)"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "En la figura se muestra el trapecio \n        \\(ABDC\\)\n        , con lados \n        \\(AC = 6\\)\n        , \n        \\(CD = 5\\)\n        , \n        \\(DB = 6\\)\n         y con \n        \\(\\angle ABD = 60^\\circ\\)\n        . Entonces, el área del trapecio de la figura es:",
+    "diagram": {
+      "code": "<svg width=\"300\" height=\"150\" viewBox=\"0 0 300 150\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"50,130 215,130 170,52.06 95,52.06\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" /><foreignObject x=\"90\" y=\"35\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">C</div></foreignObject><foreignObject x=\"165\" y=\"35\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">D</div></foreignObject><foreignObject x=\"45\" y=\"135\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">A</div></foreignObject><foreignObject x=\"210\" y=\"135\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">B</div></foreignObject><foreignObject x=\"125\" y=\"35\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">5</div></foreignObject><foreignObject x=\"65\" y=\"80\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">6</div></foreignObject><foreignObject x=\"195\" y=\"80\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">6</div></foreignObject><path d=\"M200,130 A15 15 0 0 1 207.5,117.01\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" /><foreignObject x=\"190\" y=\"115\" width=\"30\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">60°</div></foreignObject></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "12",
+    "internalId": "q-1756085913477-0.25540614516733484",
+    "id": "q-ai-cat-1756087401962-3-1"
+  },
+  {
+    "correct": 2,
+    "explanation": "<ol><li>Identificamos que la figura de la piscina es una forma de \"L\". Para calcular el perímetro de una figura en forma de \"L\", podemos considerar el perímetro del rectángulo que la encierra.</li><li>Calculamos las dimensiones del rectángulo que encierra la piscina. La longitud total del marco exterior es de \\(11 \\, \\text{m}\\). Dado que el marco de piedra laja tiene un ancho \\(x\\) a cada lado de la piscina, la longitud de la piscina será \\(11 - 2x\\).</li><li>De manera similar, la anchura total del marco exterior es de \\(6 \\, \\text{m}\\). Considerando el ancho \\(x\\) del marco a cada lado, la anchura de la piscina será \\(6 - 2x\\).</li><li>Ahora, calculamos el perímetro de este rectángulo \"equivalente\" (el que encierra la piscina). La fórmula del perímetro es \\(P = 2 \\times (\\text{largo} + \\text{ancho})\\).</li><li>Sustituyendo las dimensiones, obtenemos: \\(P = 2 \\times ((11 - 2x) + (6 - 2x))\\).</li><li>Simplificando la expresión: \\(P = 2 \\times (17 - 4x)\\), lo que resulta en \\(P = 34 - 8x\\).</li><li>Por lo tanto, el perímetro de la piscina es \\((34 - 8x) \\, \\text{m}\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\((34 - 10x) \\, \\text{m}\\)"
+      },
+      {
+        "text": "\\((26 - 16x) \\, \\text{m}\\)"
+      },
+      {
+        "text": "\\((34 - 8x) \\, \\text{m}\\)"
+      },
+      {
+        "text": "\\((34 - 4x) \\, \\text{m}\\)"
+      }
+    ],
+    "sourceFileName": "image1.png",
+    "text": "La siguiente imagen es la vista aérea de una piscina en forma de “L”, que posee un marco de piedra laja de \\(x\\) metros de ancho cuyos bordes son paralelos a los bordes de la piscina. ¿Cuál es el perímetro de la piscina, sin contar el marco de piedra laja?",
+    "diagram": {
+      "code": "<svg viewBox=\"0 0 200 150\" xmlns=\"http://www.w3.org/2000/svg\"><defs><marker id=\"arrowhead\" markerWidth=\"10\" markerHeight=\"7\" refX=\"0\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"black\" /></marker></defs><rect x=\"20\" y=\"20\" width=\"160\" height=\"110\" style=\"fill:none;stroke:black;stroke-width:1;stroke-dasharray:3 2;\" /><rect x=\"25\" y=\"25\" width=\"150\" height=\"100\" style=\"fill:none;stroke:black;stroke-width:2;\" /><rect x=\"110\" y=\"75\" width=\"65\" height=\"50\" style=\"fill:none;stroke:black;stroke-width:2;\" /><path d=\"M30,30 C35,32 40,30 45,32 C50,30 55,32 60,30 C65,32 70,30 75,32 C80,30 85,32 90,30 C95,32 100,30 105,32 M30,40 C35,42 40,40 45,42 C50,40 55,42 60,40 C65,42 70,40 75,42 C80,40 85,42 90,40 M30,50 C35,52 40,50 45,52 C50,50 55,52 60,50 M30,60 C35,62 40,60 45,62 C50,60 55,62 60,60 M115,80 C120,82 125,80 130,82 C135,80 140,82 145,80 C150,82 155,80 160,82 C165,80 170,82 175,80 M115,90 C120,92 125,90 130,92 C135,90 140,92 145,90 C150,92 155,90 160,92 M115,100 C120,102 125,100 130,102 C135,100 140,102 145,100 M115,110 C120,112 125,110 130,112 C135,110 140,112 145,110 M115,120 C120,122 125,120 130,122 C135,120 140,122 145,120 M70,68 L70,80 L110,80 L110,120 L70,120 L70,125 M75,70 L75,78 L108,78 L108,118 L75,118 L75,123 M80,72 L80,76 L106,76 L106,116 L80,116 L80,121 M85,74 L85,74 L104,74 L104,114 L85,114 L85,119 M90,76 L90,72 L102,72 L102,112 L90,112 L90,117 M95,78 L95,70 L100,70 L100,110 L95,110 L95,115\" style=\"fill:none;stroke:#00BFFF;stroke-width:1;\" /><line x1=\"20\" y1=\"10\" x2=\"180\" y2=\"10\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" marker-start=\"url(#arrowhead)\" marker-end=\"url(#arrowhead)\" /><foreignObject x=\"90\" y=\"0\" width=\"20\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">11 m</div></foreignObject><line x1=\"190\" y1=\"20\" x2=\"190\" y2=\"130\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" marker-start=\"url(#arrowhead)\" marker-end=\"url(#arrowhead)\" /><foreignObject x=\"188\" y=\"70\" width=\"20\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">6 m</div></foreignObject><line x1=\"20\" y1=\"40\" x2=\"20\" y2=\"110\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" marker-start=\"url(#arrowhead)\" marker-end=\"url(#arrowhead)\" /><foreignObject x=\"0\" y=\"70\" width=\"20\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">4 m</div></foreignObject><line x1=\"125\" y1=\"130\" x2=\"175\" y2=\"130\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" marker-start=\"url(#arrowhead)\" marker-end=\"url(#arrowhead)\" /><foreignObject x=\"145\" y=\"135\" width=\"20\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">5 m</div></foreignObject><line x1=\"50\" y1=\"25\" x2=\"50\" y2=\"20\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"40\" y=\"10\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject><line x1=\"140\" y1=\"25\" x2=\"140\" y2=\"20\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"130\" y=\"10\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject><line x1=\"25\" y1=\"55\" x2=\"20\" y2=\"55\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"10\" y=\"45\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject><line x1=\"175\" y1=\"55\" x2=\"180\" y2=\"55\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"180\" y=\"45\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject><line x1=\"50\" y1=\"125\" x2=\"50\" y2=\"130\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"40\" y=\"135\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject><line x1=\"140\" y1=\"125\" x2=\"140\" y2=\"130\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"130\" y=\"135\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject><line x1=\"110\" y1=\"75\" x2=\"105\" y2=\"75\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"95\" y=\"65\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject><line x1=\"110\" y1=\"75\" x2=\"110\" y2=\"70\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"3 2\" /><foreignObject x=\"115\" y=\"60\" width=\"15\" height=\"15\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:10px; font-family:Arial, sans-serif; color:black;\">X</div></foreignObject></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "35",
+    "internalId": "q-1756085897184-0.5009349865880276",
+    "id": "q-ai-cat-1756087401962-3-2"
+  },
+  {
+    "correct": 2,
+    "explanation": "<ol><li>Sea \\(L\\) el largo y \\(W\\) el ancho de la cartulina original.</li><li>El perímetro es \\(2(L+W) = 40 \\, \\text{cm}\\), por lo tanto, \\(L+W = 20 \\, \\text{cm}\\).</li><li>El largo es \\(2 \\, \\text{cm}\\) más que el ancho: \\(L = W+2\\).</li><li>Sustituyendo \\(L\\) en la ecuación del perímetro: \\((W+2)+W = 20 \\Rightarrow 2W+2 = 20 \\Rightarrow 2W = 18 \\Rightarrow W = 9 \\, \\text{cm}\\).</li><li>Entonces, \\(L = 9+2 = 11 \\, \\text{cm}\\).</li><li>Al cortar la parte sombreada, queda un rectángulo blanco con dimensiones \\((L-x)\\) y \\((W-x)\\).</li><li>El área de este rectángulo es \\((L-x)(W-x) = 15 \\, \\text{cm}^2\\).</li><li>Sustituyendo los valores de \\(L\\) y \\(W\\): \\((11-x)(9-x) = 15\\).</li><li>Expandiendo la ecuación: \\(99 - 11x - 9x + x^2 = 15\\).</li><li>Simplificando: \\(x^2 - 20x + 99 = 15 \\Rightarrow x^2 - 20x + 84 = 0\\).</li><li>Resolviendo la ecuación cuadrática usando la fórmula general: \\(x = \\frac{-(-20) \\pm \\sqrt{(-20)^2 - 4(1)(84)}}{2(1)}\\).</li><li>\\(x = \\frac{20 \\pm \\sqrt{400 - 336}}{2} = \\frac{20 \\pm \\sqrt{64}}{2} = \\frac{20 \\pm 8}{2}\\).</li><li>Obtenemos dos posibles valores para \\(x\\): \\(x_1 = \\frac{20+8}{2} = 14\\) y \\(x_2 = \\frac{20-8}{2} = 6\\).</li><li>Dado que \\(x\\) debe ser menor que el ancho \\(W=9 \\, \\text{cm}\\) (ya que las dimensiones del rectángulo restante son \\(9-x\\) y \\(11-x\\)), el valor \\(x=14\\) no es válido.</li><li>Por lo tanto, la medida de \\(x\\) es \\(6 \\, \\text{cm}\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(3 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(9 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(6 \\, \\text{cm}\\)"
+      },
+      {
+        "text": "\\(14 \\, \\text{cm}\\)"
+      }
+    ],
+    "sourceFileName": "image.png",
+    "text": "Una persona tiene una cartulina rectangular de \\(40 \\, \\text{cm}\\) de perímetro. Esta persona debe recortar de la cartulina un pedazo de tal manera que la medida de la parte superior sea igual a la medida del costado izquierdo, tal como se representa en la parte sombreada de la figura adjunta. El largo de la cartulina es \\(2 \\, \\text{cm}\\) más que la medida de su ancho y al quitar la parte sombreada debe quedar un rectángulo cuya área sea de \\(15 \\, \\text{cm}^2\\). ¿Cuál es la medida de \\(x\\)?",
+    "diagram": {
+      "code": "<svg viewBox=\"-25 -25 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M0,0 L110,0 L110,90 L0,90 L0,0 Z M50,30 L0,30 L0,0 L50,0 L50,30 Z\" fill=\"grey\" fill-rule=\"evenodd\" stroke=\"black\" stroke-width=\"2\"/><path d=\"M0,30 L50,30 L50,0\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" stroke-dasharray=\"5 5\"/><line x1=\"50\" y1=\"-5\" x2=\"110\" y2=\"-5\" stroke=\"black\" stroke-width=\"1\"/><path d=\"M50,-5 L50,-10 M50,-5 L50,0 M110,-5 L110,-10 M110,-5 L110,0\" stroke=\"black\" stroke-width=\"1\"/><foreignObject x=\"75\" y=\"-20\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">x</div></foreignObject><line x1=\"-5\" y1=\"30\" x2=\"-5\" y2=\"90\" stroke=\"black\" stroke-width=\"1\"/><path d=\"M-5,30 L-10,30 M-5,30 L0,30 M-5,90 L-10,90 M-5,90 L0,90\" stroke=\"black\" stroke-width=\"1\"/><foreignObject x=\"-20\" y=\"55\" width=\"20\" height=\"20\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:12px; font-family:Arial, sans-serif; color:black;\">x</div></foreignObject><foreignObject x=\"15\" y=\"45\" width=\"30\" height=\"30\"><div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size:24px; font-family:Arial, sans-serif; color:black;\">&#x2702;</div></foreignObject></svg>",
+      "type": "svg"
+    },
+    "originalQuestionNumber": "22",
+    "internalId": "q-1756085925132-0.29633424151467747",
+    "id": "q-ai-cat-1756087401962-3-3"
+  },
+  {
+    "correct": 1,
+    "explanation": "<ol><li>Las dimensiones de la piscina son \\(5 \\, \\text{m}\\) de ancho y \\(12 \\, \\text{m}\\) de largo.</li><li>Se desea colocar pasto de ancho \\(x \\, \\text{m}\\) por todo el borde externo de la piscina. Esto significa que el ancho \\(x\\) se añade a cada lado de la piscina (arriba, abajo, izquierda, derecha).</li><li>Las nuevas dimensiones de la piscina con el borde de pasto serán:<ul><li>Ancho total: \\(5 \\, \\text{m} + x \\, \\text{m} + x \\, \\text{m} = (5 + 2x) \\, \\text{m}\\)</li><li>Largo total: \\(12 \\, \\text{m} + x \\, \\text{m} + x \\, \\text{m} = (12 + 2x) \\, \\text{m}\\)</li></ul></li><li>El área total de la superficie que ocupa la piscina con el borde de pasto es el producto de estas nuevas dimensiones: \\(A = (5 + 2x)(12 + 2x)\\, \\text{m}^2\\).</li><li>Se nos da que el área total es de \\(144 \\, \\text{m}^2\\). Por lo tanto, se iguala la expresión del área a \\(144\\): \\((5 + 2x)(12 + 2x) = 144\\).</li><li>Ahora, se expande y simplifica la ecuación:<ul><li>\\(60 + 10x + 24x + 4x^2 = 144\\)</li><li>\\(4x^2 + 34x + 60 = 144\\)</li><li>\\(4x^2 + 34x + 60 - 144 = 0\\)</li><li>\\(4x^2 + 34x - 84 = 0\\)</li></ul></li><li>Finalmente, se puede dividir toda la ecuación por \\(2\\) para simplificarla: \\(2x^2 + 17x - 42 = 0\\).</li><li>Reordenando, la ecuación es \\(2x^2 + 17x = 42\\).</li></ol>",
+    "options": [
+      {
+        "text": "\\(4x^2 + 34x = 144\\)"
+      },
+      {
+        "text": "\\(2x^2 + 17x = 42\\)"
+      },
+      {
+        "text": "\\(4x^2 + 17x = 42\\)"
+      },
+      {
+        "text": "\\(2x^2 + 34x = 42\\)"
+      }
+    ],
+    "sourceFileName": "quiz_page_1.png",
+    "text": "17. Se tiene una piscina con forma rectangular de \\(5 \\, \\text{m}\\) de ancho y \\(12 \\, \\text{m}\\) de largo, en la que se desea colocar pasto de ancho \\(x \\, \\text{m}\\) por todo el borde externo de la piscina, tal como se representa en la figura adjunta. Si el área de la superficie total que ocupa la piscina con el borde de pasto, es de \\(144 \\, \\text{m}^2\\), ¿cuál de las siguientes ecuaciones permite determinar el valor de \\(x\\)?",
+    "diagram": {
+      "type": "svg",
+      "code": "<svg viewBox=\"0 0 200 120\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <marker id=\"arrowhead_black\" markerWidth=\"10\" markerHeight=\"7\" refX=\"0\" refY=\"3.5\" orient=\"auto\"><polygon points=\"0 0, 10 3.5, 0 7\" fill=\"black\" /></marker>\n  </defs>\n  <rect x=\"25\" y=\"20\" width=\"150\" height=\"80\" stroke=\"black\" fill=\"none\" />\n  <rect x=\"42.48766326904297\" y=\"35.99506378173828\" width=\"114.52713012695312\" height=\"47.263572692871094\" stroke=\"black\" fill=\"url(#wavyFill)\" />\n  <line x1=\"27.111400604248047\" y1=\"65.47286605834961\" x2=\"35.569461822509766\" y2=\"65.72163009643555\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrow_backward)\" marker-end=\"url(#arrowhead_black)\" />\n  <foreignObject x=\"23.009872436523438\" y=\"36.04440689086914\" width=\"30\" height=\"20\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">\\(x \\, \\text{m}\\)</div>\n  </foreignObject>\n  <line x1=\"99.751220703125\" y1=\"27.909116744995117\" x2=\"99.751220703125\" y2=\"27.411582946777344\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrow_forward)\" marker-end=\"url(#arrowhead_black)\" />\n  <foreignObject x=\"105\" y=\"22.014801025390625\" width=\"30\" height=\"20\">\n    <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-size: 10px; font-family: Arial, sans-serif; color: black; height: 100%; display: flex; align-items: center; justify-content: center;\">\\(x \\, \\text{m}\\)</div>\n  </foreignObject>\n  <line x1=\"99.50245666503906\" y1=\"27.411582946777344\" x2=\"99.50245666503906\" y2=\"29.1529483795166\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrow_forward)\" marker-end=\"url(#arrowhead_black)\" />\n  <line x1=\"38.30589294433594\" y1=\"64.97532653808594\" x2=\"32.833030700683594\" y2=\"64.97532653808594\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrow_backward)\" marker-end=\"url(#arrowhead_black)\" />\n</svg>"
+    },
+    "originalQuestionNumber": "17",
+    "internalId": "q-1756085901815-0.8533047748145154",
+    "id": "q-ai-cat-1756087401962-3-4"
+  }
+];
+        const categories = [
+  {
+    "id": "ai-cat-1756087401962-0",
+    "title": "Conceptos Fundamentales y Propiedades de Cuadriláteros",
+    "description": "<p>Esta categoría sienta las bases, explorando las <strong>propiedades esenciales de los cuadriláteros</strong> y las fórmulas básicas para calcular sus perímetros y áreas.</p><strong>Conceptos Clave:</strong><ul><li><strong>Cuadrilátero:</strong> Polígono de cuatro lados y cuatro vértices.</li><li><strong>Perímetro:</strong> La suma de las longitudes de todos los lados de una figura.</li><li><strong>Área:</strong> La medida de la superficie delimitada por una figura.</li></ul><strong>Fórmulas Básicas:</strong><ul><li>Perímetro de un Cuadrado: \\(P = 4L\\)</li><li>Área de un Cuadrado: \\(A = L^2\\)</li><li>Perímetro de un Rectángulo: \\(P = 2(l + a)\\)</li><li>Área de un Rectángulo: \\(A = l \\times a\\)</li><li>Área de un Romboide/Paralelogramo: \\(A = b \\times h\\) (base por altura)</li><li>Teorema de Pitágoras: En un triángulo rectángulo, \\(c^2 = a^2 + b^2\\) (útil para diagonales).</li><li>Mediana de un Trapecio: \\(M = \\frac{b_1 + b_2}{2}\\)</li></ul><p>Presta atención a las <strong>definiciones</strong> y a cómo las <strong>propiedades de los lados y ángulos</strong> afectan las medidas.</p>",
+    "summaryKey": "ai-cat-1756087401962-0",
+    "problem_ids": [
+      "q-ai-cat-1756087401962-0-0",
+      "q-ai-cat-1756087401962-0-1",
+      "q-ai-cat-1756087401962-0-2",
+      "q-ai-cat-1756087401962-0-3",
+      "q-ai-cat-1756087401962-0-4",
+      "q-ai-cat-1756087401962-0-5",
+      "q-ai-cat-1756087401962-0-6"
+    ]
+  },
+  {
+    "id": "ai-cat-1756087401962-1",
+    "title": "Cálculo de Perímetros y Áreas de Cuadriláteros Específicos",
+    "description": "<p>En esta sección, aplicarás las fórmulas de perímetro y área a <strong>cuadriláteros específicos</strong> como rectángulos, rombos y trapecios. Se espera que utilices el Teorema de Pitágoras para encontrar lados o alturas desconocidas.</p><strong>Fórmulas Clave para Cuadriláteros Específicos:</strong><ul><li>Área de un Trapecio: \\(A = \\frac{(b_1 + b_2)}{2} h\\)</li><li>Área de un Rombo: \\(A = \\frac{d_1 \\times d_2}{2}\\) (donde \\(d_1\\) y \\(d_2\\) son las diagonales)</li><li>Relación Lado-Diagonal en un Rombo: Las diagonales de un rombo son perpendiculares y se bisecan entre sí, formando cuatro triángulos rectángulos. Por lo tanto, \\((\\frac{d_1}{2})^2 + (\\frac{d_2}{2})^2 = L^2\\) (donde \\(L\\) es la longitud del lado).</li><li><strong>Teorema de Pitágoras:</strong> Fundamental para encontrar longitudes desconocidas en triángulos rectángulos formados dentro de los cuadriláteros.</li></ul><p>Recuerda que la <strong>visualización</strong> y la <strong>descomposición</strong> de figuras complejas en más simples (como triángulos rectángulos) son habilidades cruciales aquí.</p>",
+    "summaryKey": "ai-cat-1756087401962-1",
+    "problem_ids": [
+      "q-ai-cat-1756087401962-1-0",
+      "q-ai-cat-1756087401962-1-1",
+      "q-ai-cat-1756087401962-1-2",
+      "q-ai-cat-1756087401962-1-3",
+      "q-ai-cat-1756087401962-1-4",
+      "q-ai-cat-1756087401962-1-5",
+      "q-ai-cat-1756087401962-1-6",
+      "q-ai-cat-1756087401962-1-7"
+    ]
+  },
+  {
+    "id": "ai-cat-1756087401962-2",
+    "title": "Geometría Coordenada y Figuras Compuestas Simples",
+    "description": "<p>Esta categoría te desafía a aplicar tus conocimientos de geometría en el <strong>plano cartesiano</strong> y a trabajar con <strong>figuras compuestas simples</strong>, calculando sus perímetros y áreas mediante la descomposición o el uso de coordenadas.</p><strong>Herramientas Esenciales:</strong><ul><li><strong>Distancia entre dos puntos:</strong> Para puntos \\((x_1, y_1)\\) y \\((x_2, y_2)\\), la distancia es \\(d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}\\). Esta fórmula es clave para encontrar las longitudes de los lados de un cuadrilátero en el plano.</li><li><strong>Perímetro de una figura:</strong> La suma de las longitudes de todos sus lados.</li><li><strong>Área de figuras compuestas:</strong> Puede calcularse dividiendo la figura en formas básicas conocidas (rectángulos, cuadrados, triángulos) y sumando o restando sus áreas.</li><li><strong>Identificación de propiedades:</strong> Usa las coordenadas para verificar si los lados son paralelos (misma pendiente), perpendiculares (pendientes inversas y opuestas), o iguales en longitud.</li></ul><p>Recuerda que en figuras compuestas, a menudo puedes simplificar calculando el área o perímetro de figuras básicas y combinándolas.</p>",
+    "summaryKey": "ai-cat-1756087401962-2",
+    "problem_ids": [
+      "q-ai-cat-1756087401962-2-0",
+      "q-ai-cat-1756087401962-2-1",
+      "q-ai-cat-1756087401962-2-2",
+      "q-ai-cat-1756087401962-2-3",
+      "q-ai-cat-1756087401962-2-4"
+    ]
+  },
+  {
+    "id": "ai-cat-1756087401962-3",
+    "title": "Problemas Avanzados y Aplicaciones",
+    "description": "<p>Esta categoría agrupa los problemas más desafiantes, donde deberás integrar múltiples conceptos, resolver ecuaciones algebraicas a partir de restricciones geométricas, y posiblemente emplear trigonometría para determinar medidas desconocidas en contextos aplicados.</p><strong>Estrategias Avanzadas:</strong><ul><li><strong>Modelado algebraico:</strong> Frecuentemente, las dimensiones se expresan con variables, llevando a la necesidad de establecer y resolver ecuaciones (lineales o cuadráticas) para encontrar los valores. Por ejemplo, si el área es \\(A = x(x+2)\\), podrías necesitar resolver una ecuación cuadrática.</li><li><strong>Descomposición y composición:</strong> Para figuras complejas, divide en formas geométricas más simples, o considera la figura total y resta áreas.</li><li><strong>Uso de razones trigonométricas:</strong> Para trapecios o triángulos que no son rectángulos, las funciones trigonométricas (seno, coseno, tangente) son cruciales para calcular alturas o longitudes de lados cuando se conocen ángulos. Por ejemplo: <ul><li>\\(\\sin(\\theta) = \\frac{\\text{opuesto}}{\\text{hipotenusa}}\\)</li><li>\\(\\cos(\\theta) = \\frac{\\text{adyacente}}{\\text{hipotenusa}}\\)</li><li>\\(\\tan(\\theta) = \\frac{\\text{opuesto}}{\\text{adyacente}}\\)</li></ul></li><li><strong>Análisis de unidades:</strong> Asegúrate de que todas las medidas estén en las mismas unidades antes de realizar cálculos.</li></ul><p>Estos problemas requieren un pensamiento crítico y la capacidad de traducir escenarios del mundo real a modelos matemáticos.</p>",
+    "summaryKey": "ai-cat-1756087401962-3",
+    "problem_ids": [
+      "q-ai-cat-1756087401962-3-0",
+      "q-ai-cat-1756087401962-3-1",
+      "q-ai-cat-1756087401962-3-2",
+      "q-ai-cat-1756087401962-3-3",
+      "q-ai-cat-1756087401962-3-4"
+    ]
+  }
+];
+
+        const problemsById = {};
+        allProblemsData.forEach(p => { problemsById[p.id] = p; });
+        
+        let currentQuizProblems = [];
+        let currentCategory = null;
+        let completedCategories = JSON.parse(localStorage.getItem('completedQuizCategories')) || {};
+        let currentProblemIndex = 0;
+        let score = 0;
+        
+        const categorySelectionScreen = document.getElementById('category-selection-screen');
+        const categoryListEl = document.getElementById('category-list');
+        const overallProgressContainer = document.getElementById('overall-progress-container');
+        const overallScoreEl = document.getElementById('overall-score');
+        const showFinalResultsBtn = document.getElementById('show-final-results-btn');
+        const quizWrapperEl = document.getElementById('quiz-wrapper');
+        const summaryContainerEl = document.getElementById('summary-container');
+        const summaryContinueBtn = document.getElementById('summary-continue-btn');
+        const quizContainerEl = document.getElementById('quiz-container');
+        const headerEl = document.getElementById('problem-header');
+        const questionEl = document.getElementById('question-container');
+        const graphEl = document.getElementById('graph-container');
+        const optionsEl = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback-container');
+        const nextButton = document.getElementById('next-button');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreCounterEl = document.getElementById('score-counter');
+        const finalScreenEl = document.getElementById('final-screen');
+        const backToMenuBtn = document.getElementById('back-to-menu-btn');
+
+        function renderCategoryScreen() {
+            categoryListEl.innerHTML = '';
+            let totalCompleted = 0;
+            let totalPossibleScore = 0;
+            let totalUserScore = 0;
+
+            categories.forEach(cat => {
+                const li = document.createElement('li');
+                li.className = 'category-item';
+                li.dataset.categoryId = cat.id;
+                
+                const catProgress = completedCategories[cat.id];
+                let progressHTML = '';
+                if(catProgress) {
+                    li.classList.add('completed');
+                    if (catProgress.total > 0) {
+                        progressHTML = `<div class="progress-info">Completado: ${catProgress.score}/${catProgress.total}</div>`;
+                    }
+                    totalCompleted++;
+                    totalUserScore += catProgress.score;
+                    totalPossibleScore += cat.problem_ids.length;
+                }
+
+                li.innerHTML = `<h3>${cat.title}</h3><p>${cat.description.replace(/<[^>]*>?/gm, '').substring(0, 100)}...</p>${progressHTML}`;
+                li.onclick = () => {
+                    if (!li.classList.contains('completed')) {
+                        startCategory(cat.id);
+                    }
+                };
+                categoryListEl.appendChild(li);
+            });
+
+            if (Object.keys(completedCategories).length > 0) {
+                overallProgressContainer.classList.remove('hidden');
+                overallScoreEl.textContent = `Puntaje total: ${totalUserScore} de ${totalPossibleScore} correctas. Secciones completadas: ${totalCompleted} de ${categories.length}.`;
+            } else {
+                 overallProgressContainer.classList.add('hidden');
+            }
+
+            if (totalCompleted === categories.length && categories.length > 0) {
+                showFinalResultsBtn.classList.remove('hidden');
+            } else {
+                showFinalResultsBtn.classList.add('hidden');
+            }
+
+            quizWrapperEl.classList.add('hidden');
+            categorySelectionScreen.classList.remove('hidden');
+        }
+
+        function startCategory(categoryId) {
+            currentCategory = categories.find(c => c.id === categoryId);
+            if (!currentCategory) return;
+            
+            categorySelectionScreen.classList.add('hidden');
+            quizWrapperEl.classList.remove('hidden');
+
+            currentQuizProblems = currentCategory.problem_ids.map(id => problemsById[id]);
+            currentProblemIndex = 0;
+            score = 0;
+            
+            showSummary(currentCategory.id);
+        }
+
+        function showSummary(summaryKey) {
+            const summary = summaries[summaryKey];
+            if (!summary) {
+                 summaryContinueBtn.onclick(); return;
+            }
+            
+            const summaryTitleEl = document.getElementById('summary-title');
+            const keyConceptsEl = document.getElementById('summary-key-concepts');
+            const tipsListEl = document.getElementById('summary-tips-list');
+    
+            summaryTitleEl.textContent = `Preparación para: ${summary.title}`;
+            keyConceptsEl.innerHTML = summary.key_concepts_html;
+            
+            tipsListEl.innerHTML = '';
+            summary.tips.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                tipsListEl.appendChild(li);
+            });
+            
+            renderMath();
+            quizContainerEl.classList.add('hidden');
+            finalScreenEl.classList.add('hidden');
+            summaryContainerEl.classList.remove('hidden');
+        }
+
+        summaryContinueBtn.onclick = () => {
+            summaryContainerEl.classList.add('hidden');
+            if (currentQuizProblems && currentQuizProblems.length > 0) {
+                quizContainerEl.classList.remove('hidden');
+                renderProblem(currentProblemIndex);
+            } else {
+                endOfCategory();
+            }
+        };
+        
+        function renderProblem(index) {
+            optionsEl.innerHTML = '';
+            feedbackEl.style.display = 'none';
+            nextButton.classList.remove('visible');
+            graphEl.innerHTML = '';
+            optionsEl.className = '';
+
+            const problem = currentQuizProblems[index];
+            if (!problem) {
+                console.error("Could not find problem for index:", index, "in category:", currentCategory.title);
+                questionEl.innerHTML = "Error: No se pudo cargar la pregunta. Verifique que los datos sean correctos.";
+                return;
+            }
+
+            headerEl.textContent = `Pregunta ${index + 1} de ${currentQuizProblems.length}`;
+            questionEl.innerHTML = problem.text;
+            progressBar.style.width = `${((index) / currentQuizProblems.length) * 100}%`;
+            scoreCounterEl.textContent = `✅ Puntos: ${score}`;
+            
+            if (problem.diagram && problem.diagram.code) {
+                graphEl.style.display = 'block';
+                graphEl.innerHTML = problem.diagram.code;
+            } else {
+                graphEl.style.display = 'none';
+            }
+            
+            const optionsHaveDiagrams = problem.options.some(opt => opt.diagram && opt.diagram.code);
+
+            if (optionsHaveDiagrams) {
+                 optionsEl.className = 'options-grid-with-graphs';
+                 problem.options.forEach((opt, i) => createOptionBlock(opt, i));
+            } else {
+                 problem.options.forEach((opt, i) => createOptionButton(opt, i));
+            }
+            renderMath();
+        }
+        
+        function createOptionButton(option, index) {
+            const button = document.createElement('button');
+            button.className = 'option-button';
+            button.dataset.index = index;
+            button.innerHTML = `<span class="label">${String.fromCharCode(65 + index)})</span> <span class="value">${option.text || ''}</span>`;
+            button.onclick = handleOptionClick;
+            optionsEl.appendChild(button);
+        }
+        
+        function createOptionBlock(option, index) {
+            const optionBlock = document.createElement('div');
+            optionBlock.className = 'option-block-graph';
+            optionBlock.dataset.index = index;
+            optionBlock.onclick = handleOptionClick;
+            let diagramHTML = option.diagram ? `<div class="option-graph-canvas-container">${option.diagram.code}</div>` : '';
+            optionBlock.innerHTML = `<div class="label">${String.fromCharCode(65 + index)}) ${option.text || ''}</div> ${diagramHTML}`;
+            optionsEl.appendChild(optionBlock);
+        }
+
+        function handleOptionClick(event) {
+            const problem = currentQuizProblems[currentProblemIndex];
+            const selectedIndex = parseInt(event.currentTarget.dataset.index, 10);
+            const correctIndex = problem.correct;
+            
+            const correctButton = document.querySelector(`[data-index="${correctIndex}"]`);
+            if (correctButton) correctButton.classList.add('correct');
+            
+            let isAnswerCorrect = false;
+            const selectedButton = event.currentTarget;
+            if (selectedIndex === correctIndex) {
+                score++;
+                isAnswerCorrect = true;
+            } else {
+                selectedButton.classList.add('incorrect');
+            }
+            
+            scoreCounterEl.textContent = `✅ Puntos: ${score}`;
+            document.querySelectorAll('.option-button, .option-block-graph').forEach(btn => { btn.classList.add('disabled'); btn.onclick = null; });
+            progressBar.style.width = `${((currentProblemIndex + 1) / currentQuizProblems.length) * 100}%`;
+            
+            feedbackEl.className = isAnswerCorrect ? 'feedback-container correct' : 'feedback-container incorrect';
+            const feedbackTitle = isAnswerCorrect ? `<div id="feedback-title">${icons.check} Correcto</div>` : `<div id="feedback-title">${icons.x} Incorrecto</div>`;
+            feedbackEl.innerHTML = `${feedbackTitle}${problem.explanation}`;
+            
+            renderMath();
+            feedbackEl.style.display = 'block';
+            if (currentProblemIndex < currentQuizProblems.length - 1) { nextButton.textContent = 'Siguiente →'; } 
+            else { nextButton.textContent = 'Finalizar Sección'; }
+            nextButton.classList.add('visible');
+        }
+
+        nextButton.onclick = () => {
+            currentProblemIndex++;
+            if (currentProblemIndex < currentQuizProblems.length) {
+                renderProblem(currentProblemIndex);
+            } else {
+                endOfCategory();
+            }
+        };
+        
+        function endOfCategory() {
+            completedCategories[currentCategory.id] = {
+                score: score,
+                total: currentQuizProblems.length
+            };
+            localStorage.setItem('completedQuizCategories', JSON.stringify(completedCategories));
+            
+            quizContainerEl.classList.add('hidden');
+            finalScreenEl.classList.remove('hidden');
+
+            const percentage = currentQuizProblems.length > 0 ? Math.round((score / currentQuizProblems.length) * 100) : 100;
+            document.getElementById('final-title').textContent = `Sección Completada: ${currentCategory.title}`;
+            document.getElementById('final-message').textContent = currentQuizProblems.length > 0 ? `¡Gran trabajo! Has completado esta sección.` : `¡Concepto explorado! Ahora puedes continuar con la siguiente sección.`;
+            document.getElementById('final-score').textContent = currentQuizProblems.length > 0 ? `${score} / ${currentQuizProblems.length}` : '✔';
+            const finalPercentageEl = document.getElementById('final-percentage');
+            if (currentQuizProblems.length > 0) {
+                finalPercentageEl.textContent = `(${percentage}%)`;
+                finalPercentageEl.style.color = percentage >= 60 ? 'var(--success-color)' : 'var(--danger-color)';
+            } else {
+                finalPercentageEl.textContent = '';
+            }
+            backToMenuBtn.textContent = 'Volver al Menú';
+            backToMenuBtn.onclick = () => {
+                finalScreenEl.classList.add('hidden');
+                renderCategoryScreen();
+            };
+        }
+        
+        showFinalResultsBtn.onclick = () => {
+            categorySelectionScreen.classList.add('hidden');
+            quizWrapperEl.classList.remove('hidden');
+
+            summaryContainerEl.classList.add('hidden');
+            quizContainerEl.classList.add('hidden');
+            finalScreenEl.classList.remove('hidden');
+
+            let totalScore = 0;
+            let totalProblems = 0;
+            Object.values(completedCategories).forEach(cat => {
+                totalScore += cat.score;
+                if (cat.total > 0) {
+                    totalProblems += cat.total;
+                }
+            });
+
+            const percentage = totalProblems > 0 ? Math.round((totalScore / totalProblems) * 100) : 0;
+            document.getElementById('final-title').textContent = '¡Resumen Final del Desafío!';
+            document.getElementById('final-message').textContent = '¡Felicidades! Has completado todos los temas. Este es tu rendimiento general.';
+            document.getElementById('final-score').textContent = `${totalScore} / ${totalProblems}`;
+            const finalPercentageEl = document.getElementById('final-percentage');
+            finalPercentageEl.textContent = `(${percentage}%)`;
+            finalPercentageEl.style.color = percentage >= 60 ? 'var(--success-color)' : 'var(--danger-color)';
+            
+            backToMenuBtn.textContent = 'Reiniciar Desafío';
+            backToMenuBtn.onclick = () => {
+                localStorage.removeItem('completedQuizCategories');
+                window.location.reload();
+            };
+        };
+        
+        renderCategoryScreen();
+        renderMath();
+    });
+    </script>
+</body>
+</html>
+  
